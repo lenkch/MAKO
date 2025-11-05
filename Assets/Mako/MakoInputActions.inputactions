@@ -1,0 +1,77 @@
+{
+    "version": 1,
+    "name": "MakoInputActions",
+    "maps": [
+        {
+            "name": "Movement",
+            "id": "7e828c03-7043-4e19-b475-e78ab83b008d",
+            "actions": [
+                {
+                    "name": "Horizontal",
+                    "type": "Value",
+                    "id": "1a379815-4acb-4877-b12b-803088570490",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "68ea2ecd-51f0-40ad-b287-aeb1dbc233ee",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "1D Axis",
+                    "id": "91078848-f5c3-436c-9912-12057db527d9",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Horizontal",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "1b8003b5-2d66-4e16-89d5-8030a4e2756c",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Horizontal",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "a1eb2727-9e8f-46a0-808e-3ba1f4beda8f",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Horizontal",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "099b3805-3350-4898-bb63-72e27bab620a",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
