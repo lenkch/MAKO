@@ -2,6 +2,16 @@ using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
+
+    public GameObject optionsPanel;
+
+    public bool isOptionsOpen = false;
+
+    void Start()
+    {
+        optionsPanel.SetActive(false);
+    }
+
     public void Play() 
     {
         Debug.Log("Main Menu -  Play Button pressed");
@@ -10,6 +20,17 @@ public class MainMenu : MonoBehaviour
     public void Options() 
     {
         Debug.Log("Main Menu - Options Button pressed");
+
+        if (isOptionsOpen) 
+        {
+            optionsPanel.SetActive(false);
+            isOptionsOpen = false; 
+        } 
+        else 
+        {
+            optionsPanel.SetActive(true);
+            isOptionsOpen = true;
+        }
     }
 
     public void Quit()
