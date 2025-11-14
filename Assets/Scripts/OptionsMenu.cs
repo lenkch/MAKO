@@ -17,6 +17,6 @@ public class OptionsMenu : MonoBehaviour
 
     void SetVolumeText(float value) 
     {
-        volumeValueText.text = value + "%"; 
+        volumeValueText.text = Mathf.RoundToInt(value * 100) + "%"; 
     }
 }

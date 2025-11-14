@@ -10,6 +10,7 @@ public class MainMenu : MonoBehaviour
     void Start()
     {
         optionsPanel.SetActive(false);
+        MusicManager.Instance.PlayMusic("MainMenu");
     }
 
     public void Play() 
