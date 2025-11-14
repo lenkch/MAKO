@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class MainMenu : MonoBehaviour
     public void Play() 
     {
         Debug.Log("Main Menu -  Play Button pressed");
+        SceneManager.LoadScene("MakoTesting");
     }
 
     public void Options() 
