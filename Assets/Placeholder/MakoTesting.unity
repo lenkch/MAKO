@@ -253,10 +253,6 @@ GameObject:
   - component: {fileID: 801839200}
   - component: {fileID: 801839199}
   - component: {fileID: 801839198}
-  - component: {fileID: 801839196}
-  - component: {fileID: 801839202}
-  - component: {fileID: 801839203}
-  - component: {fileID: 801839204}
   - component: {fileID: 801839205}
   - component: {fileID: 801839206}
   m_Layer: 6
@@ -266,33 +262,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &801839196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 801839195}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5dd2ddb52657d4c488458b845d69715c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  SolidLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
-  WalkingSpeed: 6
-  GroundAcceleration: 10
-  GroundDecceleration: 8
-  AirTurnFactor: 0.7
-  AirAcceleration: 1.5
-  AirDecceleration: 3
-  JumpingSpeed: 7
-  Gravity: -20
-  CoyoteTimeCutoff: 0.3
-  m_targetHorizontalVelocity: 0
-  m_currentHorizontalVelocity: 0
-  m_verticalVelocity: 0
 --- !u!50 &801839198
 Rigidbody2D:
   serializedVersion: 5
@@ -395,61 +364,6 @@ Transform:
   - {fileID: 897197349}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &801839202
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 801839195}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74ce03565249d8747933992e5022a68a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterController2D
-  BodyCollider: {fileID: 256141849}
-  FeetCollider: {fileID: 897197348}
-  SolidLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  SkinWidth: 0.25
-  GroundVelocity: 0
-  AirVelocity: 0
-  m_velocity: {x: 0, y: 0}
-  m_grounded: 0
-  m_timeSinceAirborne: 0
---- !u!114 &801839203
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 801839195}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6df359cdeb3bc1346a84c50c0517f40a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MakoStateMachine
-  m_currentState: 0
-  m_nextState: 0
-  m_statePile:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
---- !u!114 &801839204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 801839195}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b34b9d765bfb48f42a7af213bdeb52b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MakoInput
-  m_horizontalMovement: 0
 --- !u!95 &801839205
 Animator:
   serializedVersion: 7
