@@ -78,7 +78,8 @@ class MakoAirborneObjectState : MakoObjectState
     private CharacterController2D m_controller;
     private MakoMovement m_movement;
     private MakoInput m_input;
-    private float m_inputHorizontalVelocity;
+    [SerializeField, SerializeAs("Raw Velocity")] private float m_inputHorizontalVelocity;
+    [SerializeField, SerializeAs("Smoothed Velocity")] private float m_smoothedVelocity;
     public override void OnStart()
     {
         m_movement = GetComponent<MakoMovement>();
@@ -89,14 +90,17 @@ class MakoAirborneObjectState : MakoObjectState
     public override bool OnEnter(MakoStates previousState)
     {
         if (previousState == MakoStates.Grounded)
+        {
+            m_smoothedVelocity = 0.0f;
             return true;
+        }
         return false;
     }
 
     public override void OnExit() { }
     public override MakoStates OnUpdate()
     {
-        m_inputHorizontalVelocity = m_input.HorizontalMovement * m_movement.AirTurnSpeed;
+        m_inputHorizontalVelocity = m_input.HorizontalMovement * m_movement.WalkingSpeed;
         return MakoStates.Airborne;
     }
 
@@ -110,7 +114,8 @@ class MakoAirborneObjectState : MakoObjectState
         if (m_controller.Grounded)
             return MakoStates.Grounded;
 
-        //m_controller.GroundVelocity = m_movement.SmoothVelocity(m_controller.GroundVelocity, m_inputHorizontalVelocity, m_movement.AirAcceleration, m_movement.AirDecceleration, Time.fixedDeltaTime);
+        m_smoothedVelocity = m_movement.SmoothVelocity(m_smoothedVelocity, m_inputHorizontalVelocity, m_movement.AirAcceleration, m_movement.AirDecceleration, Time.fixedDeltaTime);
+        m_controller.GroundVelocity += m_smoothedVelocity * Time.fixedDeltaTime;
         m_controller.AirVelocity += m_movement.Gravity * Time.fixedDeltaTime;
         return MakoStates.Airborne; 
     }

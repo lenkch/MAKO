@@ -49,7 +49,7 @@ public class CharacterController2D : MonoBehaviour
             if (AirVelocity < 0)
             {
                 AirVelocity = 0.0f;
-                finalPosition.y -= m_groundHit.distance;
+                finalPosition.y -= m_groundHit.distance - FeetCollider.bounds.size.y / 2.0f;
             }
             m_timeSinceAirborne = 0.0f;
         } else

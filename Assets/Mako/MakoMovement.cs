@@ -11,7 +11,7 @@ public class MakoMovement : MonoBehaviour
     public float WalkingSpeed = 8.0f;
     public float GroundAcceleration = 15.0f;
     public float GroundDecceleration = 12.0f;
-    public float AirTurnSpeed = 2.0f;
+    public float AirTurnFactor = 0.7f;
     public float AirAcceleration = 1.5f;
     public float AirDecceleration = 3.0f;
     public float JumpingSpeed = 15.0f;
