@@ -35,6 +35,9 @@ public class MusicManager : MonoBehaviour
     public void SetMusicVolume(float value)
     {
         userVolume = value;
+        // actually tu ma byt logaritmicky vztah kvoli tomu ako nase ucho vnima zvuk 
+        float logVolume = Mathf.Pow(value, 2f); 
+
         musicSource.volume = userVolume;
         PlayerPrefs.SetFloat("MusicVolume", value);
     }
