@@ -18,7 +18,7 @@ public class LivesUI : MonoBehaviour
         SetLives();
         UpdatePlayerLives();
 
-        // pre testovanie, kazde 3s player dostane 1 damage
+        // pre testovanie, kazde 3s player dostane 1 damage/heal
         //StartCoroutine(TestRoutine());
     }
 
@@ -27,8 +27,8 @@ public class LivesUI : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(3f);
-            //RestoreLives(1);
-            TakeDamage(1);
+            RestoreLives(1);
+            //akeDamage(1);
         }
     }
 
