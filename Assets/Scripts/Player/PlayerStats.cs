@@ -13,6 +13,9 @@ public class PlayerStats : MonoBehaviour
     public int maxLives = 9;
     public int currentLives;
 
+    public delegate void LivesChanged();
+    public event LivesChanged OnLivesChanged;
+
     [Header("Player Health Potions")]
     public int potionCount = 2;
     public int baseHealing = 1;
@@ -20,12 +23,18 @@ public class PlayerStats : MonoBehaviour
 
     private void Awake()
     {
+
+        Debug.Log("PlayerStats: Awake()");
+        currentLives = maxLives - 4;
         inputActions = new MakoInputActions();
         usePotionAction = inputActions.Actions.UsePotion;
+
+        
     }
+
     private void Start()
     {
-        currentLives = 5; // zmenit na max lives po testovani
+        Debug.Log("PlayerStats: Start()");
     }
 
     private void OnEnable()
@@ -45,15 +54,20 @@ public class PlayerStats : MonoBehaviour
 
         if (currentLives <= 0)
         {
+            currentLives = 0;
             // you died
+            // death animation and menu screen or whatever
+            // asi pridat animator neskor
         }
+
+        OnLivesChanged?.Invoke();
     }
 
     private void onUsePotionPress(InputAction.CallbackContext context)
     {
         Debug.Log("Use Potion pressed");
 
-        if (potionCount > 1) {
+        if (potionCount > 0) {
 
             potionCount--; 
             int potionHealing = baseHealing + additiveHealingBuff; 
@@ -64,15 +78,12 @@ public class PlayerStats : MonoBehaviour
 
     public void RestoreLives(int healing)
     {
-        if (currentLives + healing > maxLives)
+        currentLives += healing;
+        if (currentLives > maxLives)
         {
             currentLives = maxLives;
         }
-        else 
-        {
-            currentLives += healing;
-        }
 
-        PlayerUIController.instance.RestoreLivesUI(healing);
+        OnLivesChanged?.Invoke();
     }
 }

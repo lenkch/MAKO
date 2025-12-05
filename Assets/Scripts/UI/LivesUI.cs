@@ -5,75 +5,41 @@ using System.Collections.Generic;
 
 public class LivesUI : MonoBehaviour
 {
-    public int maxLives = 9;
-    public int currentLives = 9;
+    public PlayerStats playerStats; 
+
+    private int maxLives;
 
     public Sprite fullLive;
     public Sprite emptyLive;
 
     public List<Image> playerLives  = new List<Image>();
 
-    void Start()
+    private IEnumerator Start()
     {
-        SetLives();
+        yield return null;
+
+        Debug.Log("LivesUI: Start() playerStats = " + playerStats);
+
+
+        maxLives = playerStats.maxLives; 
+        playerStats.OnLivesChanged += UpdatePlayerLives;
+
         UpdatePlayerLives();
 
-        // pre testovanie, kazde 3s player dostane 1 damage/heal
-        //StartCoroutine(TestRoutine());
     }
 
-    private IEnumerator TestRoutine()
+    private void OnDestroy()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(3f);
-            RestoreLives(1);
-            //akeDamage(1);
-        }
-    }
-
-    public void TakeDamage(int damage) 
-    {
-        currentLives -= damage;
-
-        // nemoze byt menej ako 0 zivotov
-        if (currentLives < 0) 
-        {
-            currentLives = 0;
-        }
-
-        UpdatePlayerLives();
-    }
-
-    public void RestoreLives(int healing) 
-    {
-        currentLives += healing;
-
-        if (currentLives > 9) 
-        {
-            currentLives = 9;
-        }
-
-        UpdatePlayerLives();
-    }
-
-    // inicialne nacitanie zivotov (bez animacii)
-    void SetLives() 
-    {
-        for (int i = 0; i < maxLives; i++) {
-            if (i < currentLives) 
-            {
-                playerLives[i].sprite = fullLive;
-            }
-            else 
-            {
-                playerLives[i].sprite = emptyLive;
-            }
-        }
+        playerStats.OnLivesChanged -= UpdatePlayerLives;
     }
 
     void UpdatePlayerLives() 
     {
+
+        int currentLives = playerStats.currentLives; 
+
+        Debug.Log("Current lives: " + currentLives + " max lives: " + maxLives);
+
         for (int i = 0; i < maxLives; i++) 
         {
             if (i < currentLives) 
