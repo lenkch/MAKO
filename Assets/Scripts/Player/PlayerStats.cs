@@ -21,10 +21,13 @@ public class PlayerStats : MonoBehaviour
     public int baseHealing = 1;
     public int additiveHealingBuff = 0;
 
+    public delegate void PotionsChanged();
+    public event PotionsChanged OnPotionsChanged; 
+
     private void Awake()
     {
 
-        Debug.Log("PlayerStats: Awake()");
+        //Debug.Log("PlayerStats: Awake()");
         currentLives = maxLives - 4;
         inputActions = new MakoInputActions();
         usePotionAction = inputActions.Actions.UsePotion;
@@ -34,7 +37,7 @@ public class PlayerStats : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("PlayerStats: Start()");
+       // Debug.Log("PlayerStats: Start()");
     }
 
     private void OnEnable()
@@ -65,7 +68,11 @@ public class PlayerStats : MonoBehaviour
 
     private void onUsePotionPress(InputAction.CallbackContext context)
     {
-        Debug.Log("Use Potion pressed");
+        // ak mame full lives tak sa nepouzike
+        if (currentLives == maxLives) 
+        {
+            return;
+        }
 
         if (potionCount > 0) {
 
@@ -74,6 +81,8 @@ public class PlayerStats : MonoBehaviour
 
             RestoreLives(potionHealing);
         }
+
+        OnPotionsChanged?.Invoke();
     }
 
     public void RestoreLives(int healing)
