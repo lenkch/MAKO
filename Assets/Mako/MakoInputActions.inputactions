@@ -71,6 +71,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Actions",
+            "id": "d83f9c21-98b8-477c-bf0d-f7f1f001c5be",
+            "actions": [
+                {
+                    "name": "UsePotion",
+                    "type": "Button",
+                    "id": "dd2879c1-23be-43fc-a73b-c5f3b6b71d7a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0a36fca9-31d0-49fc-94d6-9886ea20ee3c",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UsePotion",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
