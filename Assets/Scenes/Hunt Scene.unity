@@ -206,8 +206,9 @@ GameObject:
   m_Component:
   - component: {fileID: 154249809}
   - component: {fileID: 154249810}
+  - component: {fileID: 154249811}
   m_Layer: 0
-  m_Name: Trigger Area
+  m_Name: 'Trigger Area '
   m_TagString: Untagged
   m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -222,8 +223,8 @@ Transform:
   m_GameObject: {fileID: 154249808}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.734, y: 0.381, z: 0}
-  m_LocalScale: {x: 0.2875, y: 1, z: 1}
+  m_LocalPosition: {x: -0.787, y: 0.312, z: 0}
+  m_LocalScale: {x: 0.74, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 157593202}
@@ -262,7 +263,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -3.0242443, y: -0.1878624}
+  m_Offset: {x: 0.5297344, y: -0.1126616}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -272,8 +273,20 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 6.9480753, y: 0.6242752}
+  m_Size: {x: 7.3151393, y: 0.7746768}
   m_EdgeRadius: 0
+--- !u!114 &154249811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154249808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b692a24869e4d294aac557a536f2237d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DetectionTrigger
 --- !u!1 &157593201
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,7 +315,7 @@ Transform:
   m_GameObject: {fileID: 157593201}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.701, y: 1.479, z: 0}
+  m_LocalPosition: {x: 5.08, y: 4.808, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -351,11 +364,11 @@ MonoBehaviour:
   raycastMask:
     serializedVersion: 2
     m_Bits: 64
-  raycastLength: 3
-  attackDistance: 1
-  attachCooldown: 2
-  enemyMovementSpeed: 0.35
-  timer: 0
+  raycastLength: 4
+  attackDistance: 0.75
+  enemyMovementSpeed: 1
+  offsetDistance: 1
+  timer: 3
 --- !u!50 &157593205
 Rigidbody2D:
   serializedVersion: 5
@@ -364,11 +377,11 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 157593201}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 100
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
@@ -379,9 +392,9 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!1 &268365110
 GameObject:
@@ -472,7 +485,7 @@ GameObject:
   m_Component:
   - component: {fileID: 597836484}
   - component: {fileID: 597836485}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Enemy Snake Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -488,7 +501,7 @@ Transform:
   m_GameObject: {fileID: 597836483}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.001, y: 0.105, z: 0}
+  m_LocalPosition: {x: -0.003, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -705,7 +718,7 @@ GameObject:
   m_Layer: 0
   m_Name: Raycast
   m_TagString: Untagged
-  m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -718,7 +731,7 @@ Transform:
   m_GameObject: {fileID: 875506912}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.552, y: 0.087, z: 0}
+  m_LocalPosition: {x: -0.246, y: 0.239, z: 0}
   m_LocalScale: {x: 0.726, y: 0.726, z: 0.726}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1051,7 +1064,7 @@ GameObject:
   m_Layer: 0
   m_Name: Hit Box
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1064,7 +1077,7 @@ Transform:
   m_GameObject: {fileID: 1590468278}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.337, y: 0.297, z: 0}
+  m_LocalPosition: {x: -0.3685, y: 0.162, z: 0}
   m_LocalScale: {x: 0.32258588, y: 0.32617018, z: 0.95581}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1104,7 +1117,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.087086946, y: -0.08826691}
+  m_Offset: {x: 0.24010423, y: -0.012598842}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1114,7 +1127,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.61970407, y: 0.6131295}
+  m_Size: {x: 0.9257385, y: 0.76446563}
   m_EdgeRadius: 0
 --- !u!1 &1668130212
 GameObject:
@@ -1290,7 +1303,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 191.38379, y: 299.10498}
+  m_AnchoredPosition: {x: 194.581, y: 297.792}
   m_SizeDelta: {x: 191.38403, y: 299.1049}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1668568314
@@ -1511,14 +1524,22 @@ MonoBehaviour:
   Gravity: -20
   JumpReleaseExtraGravity: -20
   CoyoteTimeCutoff: 0.3
+  OuterSkin: 0.02
+  DashSpeed: 8
+  DashTimer: 2
+  HorizontalRayCount: 24
+  VerticalRayCount: 12
   BodyCollider: {fileID: 712043151}
-  FeetCollider: {fileID: 1743727190}
   SolidLayerMask:
     serializedVersion: 2
     m_Bits: 8
+  m_targetGroundVelocity: 0
+  m_velocity: {x: 0, y: 0}
   m_grounded: 0
-  m_movementAction: 0
-  m_jumpAction: 0
+  m_horizontalInputAction: 1
+  m_verticalInputAction: 1
+  m_dashing: 0
+  m_dashTimer: 0
 --- !u!95 &1774695637
 Animator:
   serializedVersion: 7
@@ -1686,7 +1707,7 @@ Transform:
   m_GameObject: {fileID: 1822023348}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.103, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
