@@ -35,7 +35,8 @@ public class MakoSimplifiedMovement : MonoBehaviour
     public float DashTimer = 2.0f;
     public int HorizontalRayCount = 24;
     public int VerticalRayCount = 12;
-
+    public float AttackCooldown = 0.5f;
+    public float AttackVelocityCap = 1.0f;
     // References that must be set in editor.
     public Collider2D BodyCollider;
     public LayerMask SolidLayerMask;
@@ -53,6 +54,7 @@ public class MakoSimplifiedMovement : MonoBehaviour
     private InputAction m_inputHorizontal;
     private InputAction m_inputJump;
     private InputAction m_inputDash;
+    private InputAction m_inputAttack;
     
     [SerializeField, SerializeAs("Horizontal Input Action")] private HorizontalInputAction m_horizontalInputAction = HorizontalInputAction.Idle;
     private HorizontalInputAction m_lastHorizontalInputAction = HorizontalInputAction.MoveRight;
@@ -60,6 +62,8 @@ public class MakoSimplifiedMovement : MonoBehaviour
     [SerializeField, SerializeAs("Vertical Input Action")] private VerticalInputAction m_verticalInputAction = VerticalInputAction.Idle;
     [SerializeField, SerializeAs("Is Dashing")] private bool m_dashing = false;
     [SerializeField, SerializeAs("Current Dash Timer")] private float m_dashTimer = 0;
+    [SerializeField, SerializeAs("Is Attacking")] private bool m_attacking = false;
+    [SerializeField, SerializeAs("Current Attack Cooldown")] private float m_attackCooldown = 0;
 
     // Implied component references.
     private Rigidbody2D m_rigidBody;
@@ -77,6 +81,7 @@ public class MakoSimplifiedMovement : MonoBehaviour
         m_inputHorizontal = m_inputActions.Movement.Horizontal;
         m_inputJump = m_inputActions.Movement.Jump;
         m_inputDash = m_inputActions.Movement.Dash;
+        m_inputAttack = m_inputActions.Movement.Attack;
         
     }
     void OnEnable()
@@ -88,14 +93,35 @@ public class MakoSimplifiedMovement : MonoBehaviour
 
         m_inputDash.performed += onDashPress;
         m_inputDash.Enable();
+
+        m_inputAttack.performed += onAttackPress;
+        m_inputAttack.Enable();
     }
 
     void OnDisable()
     {
+        m_inputDash.Disable();
+        m_inputDash.performed -= onDashPress;
+
+        m_inputAttack.Disable();
+        m_inputAttack.performed -= onAttackPress;
+
         m_inputJump.Disable();
         m_inputJump.performed -= onJumpPress;
         m_inputJump.canceled -= onJumpRelease;
         m_inputHorizontal.Disable();
+    }
+    private void onAttackPress(InputAction.CallbackContext context)
+    {
+        if (!m_grounded || m_attackCooldown > 0)
+            return;
+        m_attacking = true;
+        m_dashing = false;
+    }
+    public void OnAttackFinish()
+    {
+        m_attacking = false;
+        m_attackCooldown = AttackCooldown;
     }
     private void onDashPress(InputAction.CallbackContext context)
     {
@@ -108,6 +134,8 @@ public class MakoSimplifiedMovement : MonoBehaviour
     }
     private void onJumpPress(InputAction.CallbackContext context)
     {
+        if (m_attacking)
+            return;
         if (m_verticalInputAction == VerticalInputAction.Idle)
             m_verticalInputAction = VerticalInputAction.JumpPressed;
         
@@ -130,7 +158,7 @@ public class MakoSimplifiedMovement : MonoBehaviour
 
     void Update()
     {
-        if (!m_dashing)
+        if (!m_dashing && !m_attacking)
         {
             int hor = (int)m_inputHorizontal.ReadValue<float>();
             switch (hor)
@@ -144,6 +172,9 @@ public class MakoSimplifiedMovement : MonoBehaviour
 
             m_targetGroundVelocity = hor * WalkingSpeed;
         }
+
+        if (m_attackCooldown > 0)
+            m_attackCooldown -= Time.deltaTime;
     }
 
     void FixedUpdate()
@@ -157,6 +188,9 @@ public class MakoSimplifiedMovement : MonoBehaviour
                 m_velocity.y = JumpingSpeed;
             }
         }
+
+        if (m_attacking)
+            m_velocity.x = Mathf.Clamp(m_velocity.x, -AttackVelocityCap, AttackVelocityCap);
 
         // Apply horizontal and vertical acceleration.
         m_velocity.x = Mathf.Lerp(m_velocity.x, m_targetGroundVelocity, ((m_targetGroundVelocity * Time.fixedDeltaTime < m_velocity.x) ? GroundDecceleration : GroundAcceleration) * Time.fixedDeltaTime);
@@ -194,6 +228,7 @@ public class MakoSimplifiedMovement : MonoBehaviour
         m_rigidBody.MovePosition(m_rigidBody.position + m_velocity * Time.fixedDeltaTime);
 
         // Update graphics variables.
+        m_animator.SetBool("Attacking", m_attacking);
         m_animator.SetBool("Dashing", m_dashing);
         m_animator.SetBool("Grounded", m_grounded);
         m_animator.SetFloat("GroundVelocity", Mathf.Abs(m_velocity.x));
@@ -241,7 +276,7 @@ public class MakoSimplifiedMovement : MonoBehaviour
             if (hit.collider != null)
             {
                 distance = hit.distance;
-                rawVelocity.y = (direction * (hit.distance - OuterSkin)) / Time.fixedDeltaTime;
+                rawVelocity.y = direction * (hit.distance - OuterSkin) / Time.fixedDeltaTime;
                 
                 m_grounded = !m_climbingSlope ? direction < 0 : m_climbingSlope;
             }
