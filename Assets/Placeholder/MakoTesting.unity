@@ -400,13 +400,12 @@ MonoBehaviour:
   WalkingSpeed: 6
   GroundAcceleration: 10
   GroundDecceleration: 8
-  AirTurnFactor: 0.7
-  AirAcceleration: 1.5
-  AirDecceleration: 3
   JumpingSpeed: 7
   Gravity: -20
+  MaxUpwardsVelocity: 20
+  MaxDownwardsVelocity: -1000
   JumpReleaseExtraGravity: -20
-  CoyoteTimeCutoff: 0.3
+  CoyoteTimer: 0.5
   OuterSkin: 0.025
   DashSpeed: 10
   DashTimer: 0.25
@@ -421,6 +420,7 @@ MonoBehaviour:
   m_targetGroundVelocity: 0
   m_velocity: {x: 0, y: 0}
   m_grounded: 0
+  m_coyoteTimer: 0
   m_horizontalInputAction: 1
   m_verticalInputAction: 1
   m_dashing: 0

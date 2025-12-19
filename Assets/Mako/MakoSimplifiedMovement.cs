@@ -23,13 +23,12 @@ public class MakoSimplifiedMovement : MonoBehaviour
     public float WalkingSpeed = 6.0f;
     public float GroundAcceleration = 10.0f;
     public float GroundDecceleration = 8.0f;
-    public float AirTurnFactor = 0.7f;
-    public float AirAcceleration = 1.5f;
-    public float AirDecceleration = 3.0f;
     public float JumpingSpeed = 7.0f;
     public float Gravity = -20.0f;
+    public float MaxDownwardsVelocity = -100.0f;
+
     public float JumpReleaseExtraGravity = -20.0f;
-    public float CoyoteTimeCutoff = 0.3f;
+    public float CoyoteTimer = 0.5f;
     public float OuterSkin = 0.02f;
     public float DashSpeed = 10.0f;
     public float DashTimer = 2.0f;
@@ -47,6 +46,7 @@ public class MakoSimplifiedMovement : MonoBehaviour
     
     // Collision detection variables.
     [SerializeField, SerializeAs("Is Grounded")] private bool m_grounded = false;
+    [SerializeField, SerializeAs("Coyote Timer")] private float m_coyoteTimer = 0;
 
 
     // Input variables.
@@ -174,7 +174,19 @@ public class MakoSimplifiedMovement : MonoBehaviour
         }
 
         if (m_attackCooldown > 0)
+        {
             m_attackCooldown -= Time.deltaTime;
+        }
+        
+        if (m_coyoteTimer > 0)
+        {
+            m_coyoteTimer -= Time.deltaTime;
+            if (m_coyoteTimer < 0)
+            {
+                m_grounded = false;
+                m_coyoteTimer = 0;
+            }
+        }
     }
 
     void FixedUpdate()
@@ -206,11 +218,13 @@ public class MakoSimplifiedMovement : MonoBehaviour
         }
 
         m_velocity.y += (Gravity + ((m_verticalInputAction == VerticalInputAction.JumpReleased) ? JumpReleaseExtraGravity : 0.0f)) * Time.fixedDeltaTime;
+        m_velocity.y = Mathf.Max(m_velocity.y, MaxDownwardsVelocity * Time.fixedDeltaTime);
 
         // Apply collisions and velocity.
         horizontalCollisions(m_rigidBody.position, ref m_velocity);
         verticalCollisions(m_rigidBody.position, ref m_velocity);
         cornerCollisions(m_rigidBody.position, ref m_velocity);
+
         // If going down and have landed, update jumping state.
         if (m_grounded)
         {
@@ -266,7 +280,7 @@ public class MakoSimplifiedMovement : MonoBehaviour
         var start = new Vector2(bounds.min.x, direction < 0 ? bounds.min.y : bounds.max.y);
         var end = new Vector2(bounds.max.x, start.y);
         
-        m_grounded = m_climbingSlope;
+        bool grounded = m_climbingSlope;
         for (var i = 0; i < VerticalRayCount; i++)
         {
             var origin = Vector2.Lerp(start, end, i / (float) (VerticalRayCount - 1));
@@ -278,9 +292,10 @@ public class MakoSimplifiedMovement : MonoBehaviour
                 distance = hit.distance;
                 rawVelocity.y = direction * (hit.distance - OuterSkin) / Time.fixedDeltaTime;
                 
-                m_grounded = !m_climbingSlope ? direction < 0 : m_climbingSlope;
+                grounded = !m_climbingSlope ? direction < 0 : m_climbingSlope;
             }
         }
+
         if (m_climbingSlope)
         {
             var xDirection = Mathf.Sign(velocity.x);
@@ -299,6 +314,21 @@ public class MakoSimplifiedMovement : MonoBehaviour
             }
         }
 
+
+        if (m_grounded && !grounded && m_coyoteTimer <= 0)
+        {
+            if (direction == Vector2.down.y)
+            {
+                m_coyoteTimer = CoyoteTimer;
+            } else
+            {
+                m_grounded = false;
+            }
+        }  else if (!m_grounded && grounded)
+        {
+            // Update immediately.
+            m_grounded = true;
+        }
     }
 
     void horizontalCollisions(Vector2 position, ref Vector2 rawVelocity)
@@ -355,121 +385,4 @@ public class MakoSimplifiedMovement : MonoBehaviour
         Debug.DrawLine(new Vector2(min.x, min.y), new Vector2(min.x, max.y), color);
         Debug.DrawLine(new Vector2(max.x, min.y), new Vector2(max.x, max.y), color);
     }
-    /*private RaycastHit2D[] m_verticalRayCasts = new RaycastHit2D[VerticalRayCount];
-    private RaycastHit2D[] m_horizontalRayCasts  = new RaycastHit2D[HorizontalRayCount];
-    void wallCollide(Vector2 position, ref Vector2 rawVelocity)
-    {
-        var bounds = BodyCollider.bounds;
-        bounds.Expand(-2 * OuterSkin);
-
-        DebugDrawBounds(BodyCollider.bounds, Color.white);
-        DebugDrawBounds(bounds, Color.violet);
-        
-        var velocity = rawVelocity * Time.fixedDeltaTime;
-        var direction = (velocity.x >= 0) ? Vector2.right : Vector2.left;
-
-        var distance = bounds.size.x / 2.0f + Mathf.Abs(velocity.x);
-
-        var start = new Vector2(bounds.center.x, bounds.min.y);
-        var end = new Vector2(bounds.center.x, bounds.max.y);
-
-        Debug.Log("----");
-        for (int i = 0; i < HorizontalRayCount; i++)
-        {
-            var origin = Vector2.Lerp(start, end, (float) i / (float) (HorizontalRayCount - 1));
-            var ray = Physics2D.Raycast(origin, direction, distance, SolidLayerMask);
-            Debug.DrawRay(origin, direction * distance, (ray.collider != null) ? Color.red : Color.green);
-
-            if (ray.collider == null)
-                continue;
-
-            var angle = Vector2.Angle(Vector3.left, ray.normal);
-
-            if (angle == 0 || angle == 180)
-            {
-                rawVelocity.x = direction.x * (ray.fraction * distance - bounds.size.x / 2.0f) / Time.fixedDeltaTime;
-                return;
-            } else if (i >= HorizontalRayCount / 2)
-            {
-                rawVelocity.x = 0;
-                return;
-            }
-
-            
-            var slopeDirection = new Vector2(ray.normal.y, -ray.normal.x) * direction.x;
-
-            var directedVelocity = slopeDirection * rawVelocity.magnitude;
-            rawVelocity = directedVelocity;
-
-            Debug.DrawLine(ray.point, ray.point + directedVelocity * 2.0f, Color.pink);
-            Debug.DrawLine(ray.point + slopeDirection, ray.point + directedVelocity * 2.0f, Color.blue);
-
-            m_horizontalRayCasts[i] = ray;
-            Debug.Log($"{i}: {angle}");
-        }
-    }
-    void verticalCollide(Vector2 position, ref Vector2 rawVelocity)
-    {
-        var bounds = BodyCollider.bounds;
-        var feetBounds = FeetCollider.bounds;
-        bounds.Expand(-2 * OuterSkin);
-        feetBounds.Expand(-2 * OuterSkin);
-        
-        var velocity = rawVelocity * Time.fixedDeltaTime;
-        var direction = (velocity.y >= 0) ? Vector2.up : Vector2.down;
-
-        var distance = feetBounds.size.y / 2.0f + Mathf.Abs(velocity.y);
-
-        var start = new Vector2(bounds.min.x, (velocity.y > 0) ? bounds.max.y : bounds.min.y);
-        var end = new Vector2(bounds.max.x, (velocity.y > 0) ? bounds.max.y : bounds.min.y);
-
-        bool hit = false;
-        for (var i = 0; i < VerticalRayCount; i++)
-        {
-            var origin = Vector2.Lerp(start, end, (float) i / (float) (VerticalRayCount - 1));
-            var ray = Physics2D.Raycast(origin, direction, distance, SolidLayerMask);
-            Debug.DrawRay(origin, direction * distance, (ray.collider != null) ? Color.red : Color.green);
-
-            if (ray.collider == null)
-                continue;
-
-            hit = true;
-            distance = ray.distance;
-        }
-
-        if (hit)
-        {
-            // Nudge Mako to be flush with collision surface
-            rawVelocity.y = (direction.y * distance) / Time.fixedDeltaTime;
-        }
-    }
-    void groundCollide(Vector2 position, ref Vector2 rawVelocity)
-    {
-        var velocity = rawVelocity * Time.fixedDeltaTime;
-        var start = new Vector2(velocity.x + FeetCollider.bounds.center.x, FeetCollider.bounds.center.y);
-        var distance = Math.Abs(velocity.y);
-        var direction = rawVelocity.y > 0 ? Vector2.up : Vector2.down;
-
-        m_groundHit = Physics2D.BoxCast(start, FeetCollider.bounds.size, 0.0f, Vector2.down, distance, SolidLayerMask);
-        m_grounded = m_groundHit.collider != null;
-
-        if (m_grounded)
-        {
-            // If going down and have landed, nudge Mako down to be flush with the ground.
-            if (rawVelocity.y < 0)
-            {
-                rawVelocity.y = (direction.y * m_groundHit.distance) / Time.fixedDeltaTime;
-                m_animator.SetBool("Jumping", false);
-                if (m_verticalInputAction != VerticalInputAction.JumpPressed)
-                    m_verticalInputAction = VerticalInputAction.Idle;
-            }
-
-            // If a jump has been requested, give a burst of speed.
-            if (m_verticalInputAction == VerticalInputAction.JumpPressed)
-            {
-                m_animator.SetBool("Jumping", true);
-                rawVelocity.y = JumpingSpeed;
-            }
-        }
-    }*/
 }
