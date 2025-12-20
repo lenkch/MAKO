@@ -18,7 +18,7 @@ public class CameraTarget : MonoBehaviour
     void Update()
     {
         var diff = Mako.transform.position - transform.position;
-        Debug.Log(diff);
+        //Debug.Log(diff);
 
         if (Mathf.Abs(diff.x) > 1.0f)
         {
