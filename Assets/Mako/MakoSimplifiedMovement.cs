@@ -7,9 +7,9 @@ using UnityEngine.InputSystem;
 
 public enum HorizontalInputAction
 {
-    MoveRight,
+    MoveLeft,
     Idle,
-    MoveLeft
+    MoveRight
 }
 public enum VerticalInputAction
 {
@@ -17,26 +17,53 @@ public enum VerticalInputAction
     Idle,
     JumpReleased
 }
-
-public class MakoSimplifiedMovement : MonoBehaviour
+public enum MakoState
+{
+    RunAround,
+    Attack,
+    WallSlide,
+    Dashing
+}
+public enum MakoWallSlideState
+{
+    Inactive,
+    WallHang,
+    WallSlide
+}
+struct MakoGraphicsPacket
+{
+    public bool Attacking;
+    public bool Dashing;
+    public bool Grounded;
+    public bool Moving;
+    public float GroundVelocity;
+    public float AirVelocity;
+    public bool FacingRight;
+    public bool Jumping;
+    public MakoWallSlideState WallSlideState;
+}
+public partial class MakoSimplifiedMovement : MonoBehaviour
 {
     // Constants, modifiable in editor.
-    public float WalkingSpeed = 6.0f;
+    public float WalkingSpeed = 300.0f;
     public float GroundAcceleration = 10.0f;
     public float GroundDecceleration = 8.0f;
-    public float JumpingSpeed = 7.0f;
+    public float JumpingSpeed = 400.0f;
     public float Gravity = -20.0f;
-    public float MaxDownwardsVelocity = -100.0f;
+    public float MaxDownwardsVelocity = -1000.0f;
 
     public float JumpReleaseExtraGravity = -20.0f;
     public float CoyoteTimer = 0.5f;
-    public float OuterSkin = 0.02f;
+    public float OuterSkin = 0.025f;
     public float DashSpeed = 10.0f;
-    public float DashTimer = 2.0f;
+    public float DashTimer = 0.25f;
     public int HorizontalRayCount = 24;
     public int VerticalRayCount = 12;
     public float AttackCooldown = 0.5f;
     public float AttackVelocityCap = 1.0f;
+    public float WallStuckTimer = 2.0f;
+    public Vector2 WallJumpSpeed = new Vector2(600.0f, 400.0f);
+
     // References that must be set in editor.
     public Collider2D BodyCollider;
     public LayerMask SolidLayerMask;
@@ -48,7 +75,6 @@ public class MakoSimplifiedMovement : MonoBehaviour
     // Collision detection variables.
     [SerializeField, SerializeAs("Is Grounded?")] private bool m_grounded = false;
     [SerializeField, SerializeAs("Current Coyote Timer")] private float m_coyoteTimer = 0;
-
 
     // Input variables.
     private MakoInputActions m_inputActions;
@@ -63,19 +89,16 @@ public class MakoSimplifiedMovement : MonoBehaviour
 
 
     [SerializeField, SerializeAs("Vertical Input Action")] private VerticalInputAction m_verticalInputAction = VerticalInputAction.Idle;
-    [SerializeField, SerializeAs("Is Dashing?")] private bool m_dashing = false;
     [SerializeField, SerializeAs("Current Dash Timer")] private float m_dashTimer = 0;
-    [SerializeField, SerializeAs("Is Attacking?")]private bool m_attacking = false;
     [SerializeField, SerializeAs("Current Attack Cooldown")] private float m_attackCooldown = 0;
 
     // Properties.
     public HorizontalInputAction HorizontalInputAction { get { return m_horizontalInputAction; } }
     public VerticalInputAction VerticalInputAction { get { return m_verticalInputAction; } }
-    public bool IsDashing { get { return m_dashing; } }
-    public bool IsAttacking { get { return m_attacking; }}
     public bool IsGrounded { get { return m_grounded; }}
     public Vector2 Velocity { get { return m_velocity; }}
     public float TargetGroundVelocity { get { return m_targetGroundVelocity; }}
+    public MakoState State { get { return m_state; } }
 
     // Implied component references.
     private Rigidbody2D m_rigidBody;
@@ -83,9 +106,13 @@ public class MakoSimplifiedMovement : MonoBehaviour
     private SpriteRenderer m_renderer;
     private Animator m_animator;
 
-    bool m_climbingSlope = false;
-    float m_slopeAngle = 0.0f;
+    private bool m_climbingSlope = false;
+    private float m_slopeAngle = 0.0f;
 
+
+    [SerializeField, SerializeAs("Mako State")] private MakoState m_state;
+
+    private MakoGraphicsPacket m_graphicsPacket;
 
     void Awake()
     {
@@ -94,73 +121,103 @@ public class MakoSimplifiedMovement : MonoBehaviour
         m_inputJump = m_inputActions.Movement.Jump;
         m_inputDash = m_inputActions.Movement.Dash;
         m_inputAttack = m_inputActions.Movement.Attack;
-        
     }
+    
+    private void enableState(MakoState state)
+    {
+        switch (state)
+        {
+            case MakoState.RunAround: enableState_RunAround(); break;
+            case MakoState.Dashing: enableState_Dashing(); break;
+            case MakoState.Attack: enableState_Attacking(); break;
+            case MakoState.WallSlide: enableState_WallSlide(); break;
+            default: Debug.LogError("Unimplemented state!"); break;
+        }
+    }
+    private void disableState(MakoState state)
+    {
+        switch (state)
+        {
+            case MakoState.RunAround: disableState_RunAround(); break;
+            case MakoState.Dashing: disableState_Dashing(); break;
+            case MakoState.Attack: disableState_Attacking(); break;
+            case MakoState.WallSlide: disableState_WallSlide(); break;
+            default: Debug.LogError("Unimplemented state!"); break;
+        }
+    }
+    private void initState(MakoState state)
+    {
+        switch (state)
+        {
+            case MakoState.RunAround: initState_RunAround(); break;
+            case MakoState.Dashing: initState_Dashing(); break;
+            case MakoState.Attack: initState_Attacking(); break;
+            case MakoState.WallSlide: initState_WallSlide(); break;
+            default: Debug.LogError("Unimplemented state!"); break;
+        }
+    }
+    private void deinitState(MakoState state)
+    {
+        switch (state)
+        {
+            case MakoState.RunAround: deinitState_RunAround(); break;
+            case MakoState.Dashing: deinitState_Dashing(); break;
+            case MakoState.Attack: deinitState_Attacking(); break;
+            case MakoState.WallSlide: deinitState_WallSlide(); break;
+            default: Debug.LogError("Unimplemented state!"); break;
+        }
+    }
+    private void updateState(MakoState state)
+    {
+        switch (state)
+        {
+            case MakoState.RunAround: updateState_RunAround(); break;
+            case MakoState.Dashing: updateState_Dashing(); break;
+            case MakoState.Attack: updateState_Attacking(); break;
+            case MakoState.WallSlide: updateState_WallSlide(); break;
+            default: Debug.LogError("Unimplemented state!"); break;
+        }
+    }
+    private void fixedUpdateState(MakoState state)
+    {
+        switch (state)
+        {
+            case MakoState.RunAround: fixedUpdateState_RunAround(); break;
+            case MakoState.Dashing: fixedUpdateState_Dashing(); break;
+            case MakoState.Attack: fixedUpdateState_Attacking(); break;
+            case MakoState.WallSlide: fixedUpdateState_WallSlide(); break;
+            default: Debug.LogError("Unimplemented state!"); break;
+        }
+    }
+    private void switchState(MakoState state)
+    {
+        disableState(m_state);
+        deinitState(m_state);
+        m_state = state;
+        enableState(m_state);
+        initState(m_state);
+    }
+
     void OnEnable()
     {
-        m_inputHorizontal.Enable();
-        m_inputJump.performed += onJumpPress;
-        m_inputJump.canceled += onJumpRelease;
+        enableState(m_state);
+
+        m_inputHorizontal.Enable();        
         m_inputJump.Enable();
-
-        m_inputDash.performed += onDashPress;
         m_inputDash.Enable();
-
-        m_inputAttack.performed += onAttackPress;
         m_inputAttack.Enable();
     }
 
     void OnDisable()
     {
         m_inputDash.Disable();
-        m_inputDash.performed -= onDashPress;
-
         m_inputAttack.Disable();
-        m_inputAttack.performed -= onAttackPress;
-
         m_inputJump.Disable();
-        m_inputJump.performed -= onJumpPress;
-        m_inputJump.canceled -= onJumpRelease;
         m_inputHorizontal.Disable();
+
+        disableState(m_state);
     }
-    private void onAttackPress(InputAction.CallbackContext context)
-    {
-        if (!m_grounded || m_attackCooldown > 0)
-            return;
-        m_attacking = true;
-        m_dashing = false;
-    }
-    public void OnAttackFinish()
-    {
-        m_attacking = false;
-        m_attackCooldown = AttackCooldown;
-    }
-    private void onDashPress(InputAction.CallbackContext context)
-    {
-        if (m_dashing)
-            return;
-        m_dashing = true;
-        m_dashTimer = DashTimer;
-        if (m_verticalInputAction == VerticalInputAction.JumpPressed)
-            m_verticalInputAction = VerticalInputAction.Idle;
-    }
-    private void onJumpPress(InputAction.CallbackContext context)
-    {
-        if (m_attacking)
-            return;
-        if (m_verticalInputAction == VerticalInputAction.Idle)
-            m_verticalInputAction = VerticalInputAction.JumpPressed;
-        
-        m_dashing = false;
-        m_dashTimer = 0;
-    }
-    private void onJumpRelease(InputAction.CallbackContext context)
-    {
-        if (m_dashing)
-            return;
-        if (m_verticalInputAction == VerticalInputAction.JumpPressed)
-            m_verticalInputAction = VerticalInputAction.JumpReleased;
-    }
+    
     void Start()
     {
         m_rigidBody = GetComponent<Rigidbody2D>();
@@ -170,113 +227,23 @@ public class MakoSimplifiedMovement : MonoBehaviour
 
     void Update()
     {
-        if (!m_dashing && !m_attacking)
-        {
-            int hor = (int)m_inputHorizontal.ReadValue<float>();
-            switch (hor)
-            {
-                case 1: m_horizontalInputAction = HorizontalInputAction.MoveRight; break;
-                case -1: m_horizontalInputAction = HorizontalInputAction.MoveLeft; break;
-                default: m_horizontalInputAction = HorizontalInputAction.Idle; break;
-            }
-            if (m_horizontalInputAction != HorizontalInputAction.Idle)
-                m_lastHorizontalInputAction = m_horizontalInputAction;
-
-            m_targetGroundVelocity = hor * WalkingSpeed;
-        }
-
-        if (m_attackCooldown > 0)
-        {
-            m_attackCooldown -= Time.deltaTime;
-        }
-        
-        if (m_coyoteTimer > 0)
-        {
-            m_coyoteTimer -= Time.deltaTime;
-            if (m_coyoteTimer < 0)
-            {
-                m_grounded = false;
-                m_coyoteTimer = 0;
-            }
-        }
+        updateState(m_state);
     }
 
     void FixedUpdate()
     {
-        if (m_grounded)
-        {
-            // If a jump has been requested, give a burst of speed.
-            if (m_verticalInputAction == VerticalInputAction.JumpPressed)
-            {
-                m_animator.SetBool("Jumping", true);
-                m_velocity.y = JumpingSpeed;
-            }
-        }
+        fixedUpdateState(m_state);
+        m_animator.SetBool("Attacking", m_graphicsPacket.Attacking);
+        m_animator.SetBool("Dashing", m_graphicsPacket.Dashing);
+        m_animator.SetBool("Grounded", m_graphicsPacket.Grounded);
+        m_animator.SetFloat("GroundVelocity", m_graphicsPacket.GroundVelocity);
+        m_animator.SetFloat("AirVelocity", m_graphicsPacket.AirVelocity);
+        m_animator.SetBool("Moving", m_graphicsPacket.Moving);
+        m_animator.SetBool("Jumping", m_graphicsPacket.Jumping);
 
-        if (m_attacking)
-            m_velocity.x = Mathf.Clamp(m_velocity.x, -AttackVelocityCap, AttackVelocityCap);
-
-        // Apply horizontal and vertical acceleration.
-        m_velocity.x = Mathf.Lerp(m_velocity.x, m_targetGroundVelocity, ((m_targetGroundVelocity * Time.fixedDeltaTime < m_velocity.x) ? GroundDecceleration : GroundAcceleration) * Time.fixedDeltaTime);
-        if (m_dashing)
-        {
-            m_dashTimer -= Time.fixedDeltaTime;
-            if (m_dashTimer < 0)
-            {
-                m_dashTimer = 0;
-                m_dashing = false;
-            }
-            m_velocity.x = DashSpeed * ((m_lastHorizontalInputAction == HorizontalInputAction.MoveLeft) ? -1 : 1);
-        }
-
-        m_velocity.y += (Gravity + ((m_verticalInputAction == VerticalInputAction.JumpReleased) ? JumpReleaseExtraGravity : 0.0f)) * Time.fixedDeltaTime;
-        m_velocity.y = Mathf.Max(m_velocity.y, MaxDownwardsVelocity * Time.fixedDeltaTime);
-
-        // Apply collisions and velocity.
-        horizontalCollisions(m_rigidBody.position, ref m_velocity);
-        verticalCollisions(m_rigidBody.position, ref m_velocity);
-        cornerCollisions(m_rigidBody.position, ref m_velocity);
-
-        // If going down and have landed, update jumping state.
-        if (m_grounded)
-        {
-            if (m_velocity.y < 0)
-                m_animator.SetBool("Jumping", false);
-
-            if (m_verticalInputAction != VerticalInputAction.JumpPressed)
-                m_verticalInputAction = VerticalInputAction.Idle;
-        }
-
-        //wallCollide(finalPosition, ref m_velocity);
-        //groundCollide(finalPosition, ref m_velocity);
-
-        // Apply new position.
-        m_rigidBody.MovePosition(m_rigidBody.position + m_velocity * Time.fixedDeltaTime);
-
-        // Update graphics variables.
-        m_animator.SetBool("Attacking", m_attacking);
-        m_animator.SetBool("Dashing", m_dashing);
-        m_animator.SetBool("Grounded", m_grounded);
-        m_animator.SetFloat("GroundVelocity", Mathf.Abs(m_velocity.x));
-        m_animator.SetFloat("AirVelocity", Math.Abs(m_velocity.y) > OuterSkin ? m_velocity.y : 0);
-        m_animator.SetBool("Moving", m_horizontalInputAction != HorizontalInputAction.Idle);
-
-        m_renderer.flipX = m_lastHorizontalInputAction == HorizontalInputAction.MoveRight;
-    }   
-    void cornerCollisions(Vector2 position, ref Vector2 rawVelocity)
-    {
-        var velocity = rawVelocity * Time.fixedDeltaTime;
-        var direction = velocity.normalized;
-        var distance = velocity.magnitude;
-        
-        var bounds = BodyCollider.bounds;
-        bounds.Expand(-2 * OuterSkin);
-
-        var cast = Physics2D.BoxCast(bounds.center, bounds.size, 0, direction, distance, SolidLayerMask);
-        if (cast.collider != null)
-        {
-            //Debug.Break();
-        }
+        m_animator.SetBool("WallSlideActive", m_graphicsPacket.WallSlideState != MakoWallSlideState.Inactive);
+        m_animator.SetFloat("WallSlide", m_graphicsPacket.WallSlideState == MakoWallSlideState.WallSlide ? 1.0f : 0.0f);
+        m_renderer.flipX = m_graphicsPacket.FacingRight;
     }
 
     void verticalCollisions(Vector2 position, ref Vector2 rawVelocity)
@@ -320,12 +287,11 @@ public class MakoSimplifiedMovement : MonoBehaviour
                 var angle = Vector2.Angle(hit.normal, Vector2.up);
                 if (angle != m_slopeAngle)
                 {
-                    rawVelocity.x = (xDirection * (hit.distance - OuterSkin)) / Time.fixedDeltaTime;
+                    rawVelocity.x = xDirection * (hit.distance - OuterSkin) / Time.fixedDeltaTime;
                     m_slopeAngle = angle;
                 }
             }
         }
-
 
         if (m_grounded && !grounded)
         {
@@ -341,6 +307,7 @@ public class MakoSimplifiedMovement : MonoBehaviour
             // Update immediately.
             m_grounded = true;
         }
+
     }
 
     void horizontalCollisions(Vector2 position, ref Vector2 rawVelocity)
@@ -356,6 +323,9 @@ public class MakoSimplifiedMovement : MonoBehaviour
         var start = new Vector2(direction < 0 ? bounds.min.x : bounds.max.x, bounds.min.y + Mathf.Min(0, velocity.y));
         var end = new Vector2(start.x, bounds.max.y + Mathf.Max(0, velocity.y));
         m_climbingSlope = false;
+
+        if (m_state == MakoState.RunAround)
+            m_wallDirection = 0;
         for (var i = 0; i < HorizontalRayCount; i++)
         {
             var origin = Vector2.Lerp(start, end, i / (float) (HorizontalRayCount - 1));
@@ -375,9 +345,10 @@ public class MakoSimplifiedMovement : MonoBehaviour
                 } else {
                     rawVelocity.x = (hit.distance - OuterSkin) * direction / Time.fixedDeltaTime;
                     distance = hit.distance;
+
+                    if (!m_climbingSlope && m_state == MakoState.RunAround)
+                        m_wallDirection = (int) direction;
                 }
-                //rawVelocity.x = Mathf.Min(Mathf.Abs(rawVelocity.x) * direction, (hit.distance - OuterSkin) * direction / Time.fixedDeltaTime);
-                //distance = Mathf.Min(Mathf.Abs(rawVelocity.x) + OuterSkin, hit.distance);
             }
         }
     }
@@ -396,5 +367,296 @@ public class MakoSimplifiedMovement : MonoBehaviour
         Debug.DrawLine(new Vector2(min.x, max.y), new Vector2(max.x, max.y), color);
         Debug.DrawLine(new Vector2(min.x, min.y), new Vector2(min.x, max.y), color);
         Debug.DrawLine(new Vector2(max.x, min.y), new Vector2(max.x, max.y), color);
+    }
+}
+
+// RunAround state.
+public partial class MakoSimplifiedMovement
+{
+    private void onAttackPress_RunAround(InputAction.CallbackContext context)
+    {
+        if (!m_grounded || m_attackCooldown > 0)
+            return;
+        switchState(MakoState.Attack);
+    }
+    private void onDashPress_RunAround(InputAction.CallbackContext context)
+    {
+        if (!m_grounded)
+            return;
+        
+        if (m_verticalInputAction == VerticalInputAction.JumpPressed)
+            m_verticalInputAction = VerticalInputAction.Idle;
+        switchState(MakoState.Dashing);
+    }
+    private void onJumpPress_RunAround(InputAction.CallbackContext context)
+    {
+        if (m_verticalInputAction == VerticalInputAction.Idle)
+            m_verticalInputAction = VerticalInputAction.JumpPressed;
+    }
+    private void onJumpRelease_RunAround(InputAction.CallbackContext context)
+    {
+        if (m_verticalInputAction == VerticalInputAction.JumpPressed)
+            m_verticalInputAction = VerticalInputAction.JumpReleased;
+    }
+    void enableState_RunAround()
+    {
+        m_inputJump.performed += onJumpPress_RunAround;
+        m_inputJump.canceled += onJumpRelease_RunAround;
+        m_inputDash.performed += onDashPress_RunAround;
+        m_inputAttack.performed += onAttackPress_RunAround;
+
+    }
+    void disableState_RunAround()
+    {
+        m_inputDash.performed -= onDashPress_RunAround;
+        m_inputAttack.performed -= onAttackPress_RunAround;
+        m_inputJump.performed -= onJumpPress_RunAround;
+        m_inputJump.canceled -= onJumpRelease_RunAround;
+    }
+    void initState_RunAround()
+    {
+        
+    }
+    void deinitState_RunAround()
+    {
+        
+    }
+    void updateState_RunAround()
+    {
+        int hor = (int)m_inputHorizontal.ReadValue<float>();
+        switch (hor)
+        {
+            case 1: m_horizontalInputAction = HorizontalInputAction.MoveRight; break;
+            case -1: m_horizontalInputAction = HorizontalInputAction.MoveLeft; break;
+            default: m_horizontalInputAction = HorizontalInputAction.Idle; break;
+        }
+        if (m_horizontalInputAction != HorizontalInputAction.Idle)
+            m_lastHorizontalInputAction = m_horizontalInputAction;
+
+        if (hor != 0 && hor == m_wallDirection && !m_grounded)
+        {
+            switchState(MakoState.WallSlide);
+        }
+        m_targetGroundVelocity = hor * WalkingSpeed;
+
+        if (m_attackCooldown > 0)
+        {
+            m_attackCooldown -= Time.deltaTime;
+        }
+        
+        if (m_coyoteTimer > 0)
+        {
+            m_coyoteTimer -= Time.deltaTime;
+            if (m_coyoteTimer < 0)
+            {
+                m_grounded = false;
+                m_coyoteTimer = 0;
+            }
+        }
+        
+    }
+    void fixedUpdateState_RunAround()
+    {
+        // If a jump has been requested, give a burst of speed.
+        if (m_verticalInputAction == VerticalInputAction.JumpPressed)
+        {
+            if (m_grounded)
+            {
+                m_graphicsPacket.Jumping = true;
+                m_velocity.y = JumpingSpeed * Time.fixedDeltaTime;
+            }
+        }
+
+        // Apply horizontal and vertical acceleration.
+        m_velocity.x = Mathf.Lerp(m_velocity.x, m_targetGroundVelocity * Time.fixedDeltaTime, ((m_targetGroundVelocity * Time.fixedDeltaTime < m_velocity.x) ? GroundDecceleration : GroundAcceleration) * Time.fixedDeltaTime);
+        m_velocity.y += (Gravity + ((m_verticalInputAction == VerticalInputAction.JumpReleased) ? JumpReleaseExtraGravity : 0.0f)) * Time.fixedDeltaTime;
+        m_velocity.y = Mathf.Max(m_velocity.y, MaxDownwardsVelocity * Time.fixedDeltaTime);
+
+        // Apply collisions and velocity.
+        horizontalCollisions(m_rigidBody.position, ref m_velocity);
+        verticalCollisions(m_rigidBody.position, ref m_velocity);
+        // If going down and have landed, update jumping state.
+        if (m_grounded)
+        {
+            m_graphicsPacket.Jumping = false;
+
+            if (m_verticalInputAction != VerticalInputAction.JumpPressed)
+                m_verticalInputAction = VerticalInputAction.Idle;
+        }
+
+        // Apply new position.
+        m_rigidBody.MovePosition(m_rigidBody.position + m_velocity * Time.fixedDeltaTime);
+
+        // Update graphics variables.
+        m_graphicsPacket.Grounded = m_grounded;
+        m_graphicsPacket.GroundVelocity = Mathf.Abs(m_velocity.x);
+        m_graphicsPacket.AirVelocity = Math.Abs(m_velocity.y) > OuterSkin ? m_velocity.y : 0;
+        m_graphicsPacket.Moving = m_horizontalInputAction != HorizontalInputAction.Idle;
+        m_graphicsPacket.FacingRight = m_lastHorizontalInputAction == HorizontalInputAction.MoveRight;
+    }
+}
+
+// Dashing state
+public partial class MakoSimplifiedMovement
+{
+    void enableState_Dashing()
+    {
+        
+    }
+    void disableState_Dashing()
+    {
+        
+    }
+    void initState_Dashing()
+    {
+        m_graphicsPacket.Dashing = true;
+        m_dashTimer = DashTimer;
+    }
+    void deinitState_Dashing()
+    {
+        m_graphicsPacket.Dashing = false;
+    }
+    void updateState_Dashing()
+    {
+        
+    }
+    void fixedUpdateState_Dashing()
+    {
+        m_dashTimer -= Time.fixedDeltaTime;
+        if (m_dashTimer < 0)
+        {
+            m_dashTimer = 0;
+            switchState(MakoState.RunAround);
+        }
+        m_velocity.x = DashSpeed * ((m_lastHorizontalInputAction == HorizontalInputAction.MoveLeft) ? -1 : 1);
+
+        // Apply collisions and velocity.
+        horizontalCollisions(m_rigidBody.position, ref m_velocity);
+        verticalCollisions(m_rigidBody.position, ref m_velocity);
+        
+        // Apply new position.
+        m_rigidBody.MovePosition(m_rigidBody.position + m_velocity * Time.fixedDeltaTime);
+    }
+}
+
+// Attack state.
+public partial class MakoSimplifiedMovement
+{
+    public void OnAttackFinish()
+    {
+        m_attackCooldown = AttackCooldown;
+        switchState(MakoState.RunAround);
+    }
+    void enableState_Attacking()
+    {
+    }
+    void disableState_Attacking()
+    {
+        
+    }
+    void initState_Attacking()
+    {
+        m_graphicsPacket.Attacking = true;
+    }
+    void deinitState_Attacking()
+    {
+        m_graphicsPacket.Attacking = false;
+    }
+    void updateState_Attacking()
+    {
+        
+    }
+    void fixedUpdateState_Attacking()
+    {
+        m_velocity.x = Mathf.Clamp(m_velocity.x, -AttackVelocityCap, AttackVelocityCap);
+        
+        // Apply collisions and velocity.
+        horizontalCollisions(m_rigidBody.position, ref m_velocity);
+        verticalCollisions(m_rigidBody.position, ref m_velocity);
+        
+        // Apply new position.
+        m_rigidBody.MovePosition(m_rigidBody.position + m_velocity * Time.fixedDeltaTime);
+    }
+}
+
+
+// Attack state.
+public partial class MakoSimplifiedMovement
+{
+    [SerializeField, SerializeAs("Wall Stuck Direction")] private int m_wallDirection = 0;
+    [SerializeField, SerializeAs("Wall Stuck Timer")] private float m_wallStuckTimer = 0;
+    private MakoWallSlideState m_wallSlideState = MakoWallSlideState.Inactive;
+
+    private void onJumpPress_WallSlide(InputAction.CallbackContext context)
+    {
+        m_velocity = WallJumpSpeed * Time.fixedDeltaTime;
+        m_velocity.x *= -m_wallDirection;
+        switchState(MakoState.RunAround);
+    }
+    void enableState_WallSlide()
+    {
+        m_inputJump.performed += onJumpPress_WallSlide;
+    }
+    void disableState_WallSlide()
+    {
+        m_inputJump.performed -= onJumpPress_WallSlide;
+    }
+    void initState_WallSlide()
+    {
+        m_wallSlideState = MakoWallSlideState.WallHang;
+        m_wallStuckTimer = WallStuckTimer;
+        m_velocity.x = 0;
+        m_velocity.y = 0;
+    }
+    void deinitState_WallSlide()
+    {
+        m_wallSlideState = MakoWallSlideState.Inactive;
+        m_graphicsPacket.WallSlideState = MakoWallSlideState.Inactive;
+    }
+    void updateState_WallSlide()
+    {
+        m_wallStuckTimer -= Time.deltaTime;
+        if (m_wallStuckTimer < 0)
+        {
+            m_wallSlideState = MakoWallSlideState.WallSlide;
+        }
+
+        int hor = (int)m_inputHorizontal.ReadValue<float>();
+        if (hor != 0 && hor != m_wallDirection)
+            switchState(MakoState.RunAround);
+    }
+    void wallSlideCollision(Vector2 position)
+    {
+        var direction = (float) m_wallDirection;
+        var distance = OuterSkin;
+        
+        var bounds = BodyCollider.bounds;
+        bounds.Expand(-2 * OuterSkin);
+
+        Debug.DrawRay(bounds.center, new Vector2(direction, 0) * distance, Color.aquamarine);
+        var result = Physics2D.BoxCast(bounds.center, bounds.size, 0.0f, new Vector2(direction, 0), distance, SolidLayerMask);
+        if (!result)
+            m_wallDirection = 0;
+    }
+    void fixedUpdateState_WallSlide()
+    {
+        if (m_wallSlideState == MakoWallSlideState.WallSlide)
+        {
+            m_velocity.y = Gravity * Time.fixedDeltaTime;
+        }
+
+        // Apply collisions and velocity.
+        horizontalCollisions(m_rigidBody.position, ref m_velocity);
+        verticalCollisions(m_rigidBody.position, ref m_velocity);
+        wallSlideCollision(m_rigidBody.position);
+
+        // Apply new position.
+        m_rigidBody.MovePosition(m_rigidBody.position + m_velocity * Time.fixedDeltaTime);
+        m_graphicsPacket.WallSlideState = m_wallSlideState;
+
+        if (m_grounded || m_wallDirection == 0)
+        {
+            switchState(MakoState.RunAround);
+        }
     }
 }
