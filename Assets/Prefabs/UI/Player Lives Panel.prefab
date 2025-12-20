@@ -289,7 +289,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25ff9c2e902650d41a7a8469eddda867, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LivesUI
-  playerStats: {fileID: 0}
+  maxLives: 9
+  currentLives: 5
   fullLive: {fileID: 2029200385, guid: 36a04760480ed2848828e9fab94967fc, type: 3}
   emptyLive: {fileID: 762009006, guid: 36a04760480ed2848828e9fab94967fc, type: 3}
   playerLives:
