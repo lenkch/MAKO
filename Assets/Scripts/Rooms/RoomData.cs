@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.SceneManagement;
 
 public class RoomData : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class RoomData : MonoBehaviour
     public int exitHeight;
     public RoomDifficulty difficulty;
     public RoomType type;
+ 
+    
 }
 
 public enum RoomDifficulty { Easy, Medium, Hard }

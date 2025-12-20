@@ -7,71 +7,101 @@ public class LevelGenerator : MonoBehaviour
 {
     [SerializeField] private int hubExitHeight = 1;
     [SerializeField] private int roomsPerLevel = 3;
-    [SerializeField] private Grid grid;
 
-
+    [SerializeField] private RoomData firstRoom;
+    [SerializeField] private List<RoomData> lastRooms = new List<RoomData>();
     [SerializeField] private List<RoomData> rooms = new List<RoomData>();
-
     private List<RoomData> selectedRooms = new List<RoomData>();
+    [SerializeField] private bool debugPlacement = true;
 
     void Start()
     {
         GenerateLevel();
     }
-
     void GenerateLevel()
-    {
-        selectedRooms.Clear();
-        int currentHeight = hubExitHeight;
+{
+    selectedRooms.Clear();
+    selectedRooms.Add(firstRoom);
+    int currentHeight = firstRoom.exitHeight;
 
-        for (int i = 0; i < roomsPerLevel; i++)
+    for (int i = 0; i < roomsPerLevel-1; i++)
     {
         List<RoomData> matchingRooms = rooms.FindAll(room => room.entryHeight == currentHeight);
         if (matchingRooms.Count > 0)
-            {
-                RoomData pickedRoom = matchingRooms[Random.Range(0, matchingRooms.Count)];
-                selectedRooms.Add(pickedRoom);
-                currentHeight = pickedRoom.exitHeight;
-            }
-        // to resolve if matchingRooms is empty
-    }
-        Vector3 nextPosition = Vector3.zero;
-
-        // baselineWorldY is the world/local Y coordinate where the current room's entry row
-        // should be placed. Initialize from `hubExitHeight` (in tiles) using the project's
-        // Grid cell size when available so the first room starts at the expected row.
-        float baselineWorldY = 0f;
-        if (grid != null)
-            baselineWorldY = hubExitHeight * grid.cellSize.y;
-
-        foreach (RoomData room in selectedRooms)
         {
-            GameObject roomGO = Instantiate(room.gameObject, transform);
-            Tilemap tilemap = roomGO.GetComponentInChildren<Tilemap>();
-            tilemap.CompressBounds();
-            BoundsInt bounds = tilemap.cellBounds;
-
-            // cell size (world units per tile)
-            Vector3 cellSize = tilemap.layoutGrid.cellSize;
-
-            // Place X so the leftmost tile of the tilemap aligns with nextPosition.x
-            float placeX = nextPosition.x - bounds.xMin * cellSize.x;
-
-            // Place Y so the entry row (measured from bottom) matches baselineWorldY.
-            // Account for the tilemap's cellBounds.yMin because the tilemap origin
-            // inside the prefab may not start at 0.
-            float entryCellIndex = bounds.yMin + room.entryHeight;
-            float exitCellIndex = bounds.yMin + room.exitHeight;
-            float placeY = baselineWorldY - entryCellIndex * cellSize.y;
-
-            roomGO.transform.localPosition = new Vector3(placeX, placeY, 0f);
-
-            // Update baselineWorldY to the world Y of the exit row for the next room
-            baselineWorldY = placeY + exitCellIndex * cellSize.y;
-
-            // Advance nextPosition by the room width in world units
-            nextPosition.x += bounds.size.x * cellSize.x;
+            RoomData pickedRoom = matchingRooms[Random.Range(0, matchingRooms.Count)];
+            selectedRooms.Add(pickedRoom);
+            matchingRooms.Remove(pickedRoom);
+            currentHeight = pickedRoom.exitHeight;
         }
-        
+        else
+        {
+            Debug.LogError($"No room found with entry height {currentHeight}!");
+            break;
+        }
+    }   
+    
+    List<RoomData> matchingLastRooms = lastRooms.FindAll(room => room.entryHeight == currentHeight);
+    if (matchingLastRooms.Count > 0)
+    {
+        selectedRooms.Add(matchingLastRooms[0]);
     }
+    else
+    {
+        Debug.LogError($"No last room found with entry height {currentHeight}!");
+    }
+    
+    Vector3 nextPosition = Vector3.zero;
+    float baselineWorldY = 0f;
+    
+    List<GameObject> instantiatedRooms = new List<GameObject>();
+
+    for (int i = 0; i < selectedRooms.Count; i++)
+    {
+        RoomData room = selectedRooms[i];
+        GameObject roomGO = Instantiate(room.gameObject, transform);
+
+        Tilemap tilemap = roomGO.GetComponentInChildren<Tilemap>();
+        tilemap.CompressBounds();
+        BoundsInt bounds = tilemap.cellBounds;
+
+        int entryIndex = bounds.yMin + room.entryHeight;
+        int exitIndex = bounds.yMin + room.exitHeight;
+
+        // Get the tilemap's LOCAL position within the prefab
+        Vector3 tilemapLocalOffset = tilemap.transform.localPosition;
+
+        // Calculate cell positions in LOCAL space (relative to tilemap)
+        Vector3 leftBottomLocal = tilemap.CellToLocal(new Vector3Int(bounds.xMin, bounds.yMin, 0));
+        Vector3 entryLocal = tilemap.CellToLocal(new Vector3Int(bounds.xMin, entryIndex, 0));
+        Vector3 exitLocal = tilemap.CellToLocal(new Vector3Int(bounds.xMin, exitIndex, 0));
+
+        Vector3 cellSize = tilemap.layoutGrid.cellSize;
+
+
+        // Calculate where to place the room GO so that the entry point aligns with baselineWorldY
+        // entryWorld position = roomGO.position + tilemapLocalOffset + entryLocal
+        // We want: roomGO.position + tilemapLocalOffset + entryLocal = (nextPosition.x, baselineWorldY)
+        float placeX = nextPosition.x - (tilemapLocalOffset.x + leftBottomLocal.x);
+        float placeY = baselineWorldY - (tilemapLocalOffset.y + entryLocal.y);
+
+        if (debugPlacement)
+        {
+            Debug.Log($"[LevelGenerator] Room '{room.name}' idx={i}");
+            Debug.Log($"  tilemapLocalOffset={tilemapLocalOffset}");
+            Debug.Log($"  entryLocal={entryLocal}, exitLocal={exitLocal}");
+            Debug.Log($"  baselineWorldY={baselineWorldY}, placeY={placeY}");
+        }
+
+        roomGO.transform.localPosition = new Vector3(placeX, placeY, 0f);
+
+        // Update baseline for next room
+        baselineWorldY = placeY + tilemapLocalOffset.y + exitLocal.y;
+
+        nextPosition.x += bounds.size.x * cellSize.x;
+        instantiatedRooms.Add(roomGO);
+    }
+}
+
+ 
 }
