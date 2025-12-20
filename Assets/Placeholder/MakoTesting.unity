@@ -402,7 +402,6 @@ MonoBehaviour:
   GroundDecceleration: 8
   JumpingSpeed: 7
   Gravity: -20
-  MaxUpwardsVelocity: 20
   MaxDownwardsVelocity: -1000
   JumpReleaseExtraGravity: -20
   CoyoteTimer: 0.5
@@ -417,15 +416,8 @@ MonoBehaviour:
   SolidLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  m_targetGroundVelocity: 0
-  m_velocity: {x: 0, y: 0}
-  m_grounded: 0
   m_coyoteTimer: 0
-  m_horizontalInputAction: 1
-  m_verticalInputAction: 1
-  m_dashing: 0
   m_dashTimer: 0
-  m_attacking: 0
   m_attackCooldown: 0
 --- !u!1 &1026268154
 GameObject:
@@ -2940,6 +2932,111 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 1026268154}
+--- !u!1 &1451001920
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1451001921}
+  - component: {fileID: 1451001923}
+  - component: {fileID: 1451001922}
+  - component: {fileID: 1451001924}
+  m_Layer: 0
+  m_Name: CamTarget
+  m_TagString: EditorOnly
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1451001921
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451001920}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -4.31, y: 0.589, z: 0}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &1451001922
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451001920}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &1451001923
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451001920}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1451001924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451001920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84f1c925ea1551acf90dada18179bdad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  HorizontalDistanceMultiplier: 16
+  HorizontalSpeed: 4
+  Mako: {fileID: 801839195}
 --- !u!1001 &6793329027511138053
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2991,7 +3088,7 @@ PrefabInstance:
     - target: {fileID: 3276631265394016343, guid: 2c3a19d57ee25de8a999aa1e019f64cd, type: 3}
       propertyPath: FollowTransform
       value: 
-      objectReference: {fileID: 801839200}
+      objectReference: {fileID: 1451001921}
     - target: {fileID: 8441817501467709073, guid: 2c3a19d57ee25de8a999aa1e019f64cd, type: 3}
       propertyPath: m_Name
       value: Camera
@@ -3008,3 +3105,4 @@ SceneRoots:
   - {fileID: 6793329027511138053}
   - {fileID: 704364857}
   - {fileID: 801839200}
+  - {fileID: 1451001921}

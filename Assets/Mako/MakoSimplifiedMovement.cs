@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -42,11 +43,11 @@ public class MakoSimplifiedMovement : MonoBehaviour
 
     // Physics variables.
     [SerializeField, SerializeAs("Target Ground Velocity")] private float m_targetGroundVelocity;
-    [SerializeField, SerializeAs("Velocity")] private Vector2 m_velocity = Vector2.zero;
+    [SerializeField, SerializeAs("Current Velocity")] private Vector2 m_velocity = Vector2.zero;
     
     // Collision detection variables.
-    [SerializeField, SerializeAs("Is Grounded")] private bool m_grounded = false;
-    [SerializeField, SerializeAs("Coyote Timer")] private float m_coyoteTimer = 0;
+    [SerializeField, SerializeAs("Is Grounded?")] private bool m_grounded = false;
+    [SerializeField, SerializeAs("Current Coyote Timer")] private float m_coyoteTimer = 0;
 
 
     // Input variables.
@@ -56,14 +57,25 @@ public class MakoSimplifiedMovement : MonoBehaviour
     private InputAction m_inputDash;
     private InputAction m_inputAttack;
     
-    [SerializeField, SerializeAs("Horizontal Input Action")] private HorizontalInputAction m_horizontalInputAction = HorizontalInputAction.Idle;
+    
+    [SerializeField, SerializeAs("Horizontal InputAction")] private HorizontalInputAction m_horizontalInputAction = HorizontalInputAction.Idle;
     private HorizontalInputAction m_lastHorizontalInputAction = HorizontalInputAction.MoveRight;
 
+
     [SerializeField, SerializeAs("Vertical Input Action")] private VerticalInputAction m_verticalInputAction = VerticalInputAction.Idle;
-    [SerializeField, SerializeAs("Is Dashing")] private bool m_dashing = false;
+    [SerializeField, SerializeAs("Is Dashing?")] private bool m_dashing = false;
     [SerializeField, SerializeAs("Current Dash Timer")] private float m_dashTimer = 0;
-    [SerializeField, SerializeAs("Is Attacking")] private bool m_attacking = false;
+    [SerializeField, SerializeAs("Is Attacking?")]private bool m_attacking = false;
     [SerializeField, SerializeAs("Current Attack Cooldown")] private float m_attackCooldown = 0;
+
+    // Properties.
+    public HorizontalInputAction HorizontalInputAction { get { return m_horizontalInputAction; } }
+    public VerticalInputAction VerticalInputAction { get { return m_verticalInputAction; } }
+    public bool IsDashing { get { return m_dashing; } }
+    public bool IsAttacking { get { return m_attacking; }}
+    public bool IsGrounded { get { return m_grounded; }}
+    public Vector2 Velocity { get { return m_velocity; }}
+    public float TargetGroundVelocity { get { return m_targetGroundVelocity; }}
 
     // Implied component references.
     private Rigidbody2D m_rigidBody;
@@ -315,9 +327,9 @@ public class MakoSimplifiedMovement : MonoBehaviour
         }
 
 
-        if (m_grounded && !grounded && m_coyoteTimer <= 0)
+        if (m_grounded && !grounded)
         {
-            if (direction == Vector2.down.y)
+            if (direction == Vector2.down.y && m_coyoteTimer <= 0)
             {
                 m_coyoteTimer = CoyoteTimer;
             } else
