@@ -9,17 +9,19 @@ public class DetectionTrigger : MonoBehaviour
         enemy = GetComponentInParent<EnemyBehaviour>();
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D trigger)
     {
-        if (other.CompareTag("Player"))
+        Debug.Log("Entered trigger area.");
+        if (trigger.CompareTag("Player"))
         {
-            enemy.PlayerEnteredRange(other.gameObject);
+            enemy.PlayerEnteredRange(trigger.transform.root.gameObject);
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    void OnTriggerExit2D(Collider2D trigger)
     {
-        if (other.CompareTag("Player"))
+        Debug.Log("Exit trigger area.");
+        if (trigger.CompareTag("Player"))
         {
             enemy.PlayerLeftRange();
         }

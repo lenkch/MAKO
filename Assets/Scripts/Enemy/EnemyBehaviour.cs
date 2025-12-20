@@ -17,7 +17,8 @@ public class EnemyBehaviour : MonoBehaviour
     public float offsetDistance; 
     public float timer; 
 
-
+    [Header("Attack")]
+    public int damage = 1;
 
 
     #endregion 
@@ -50,6 +51,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     void Update()
     {
+        FacePlayer();
 
         if (isInRange)
         {
@@ -57,20 +59,15 @@ public class EnemyBehaviour : MonoBehaviour
             RaycastDebugger();
         }
 
-        FacePlayer();
-        //Move();
 
-
-        if (hit.collider != null)
+        if (isInRange)
         {
-            //Debug.Log("Hit collider NOT null.");
             EnemyLogic();  
         }
-        /*else if (hit.collider == null)
+        else if (hit.collider == null)
         {
-            isInRange = false;
-            //Debug.Log("Hit collider NULL.");
-        }*/
+            //isInRange = false;
+        }
 
         if (!isInRange)
         {
@@ -89,7 +86,7 @@ public class EnemyBehaviour : MonoBehaviour
         if (direction == Vector2.left)
         {
             targetMovePosition.x += offsetDistance;
-        }
+        } 
         else
         {
             targetMovePosition.x -= offsetDistance;
@@ -115,7 +112,6 @@ public class EnemyBehaviour : MonoBehaviour
 
     void EnemyLogic()
     {
-        Debug.Log("TARGET: " + target);
         distance = Vector2.Distance(transform.position, target.transform.position);
         //Debug.Log("Distance to player: " + distance);
 
@@ -167,7 +163,6 @@ public class EnemyBehaviour : MonoBehaviour
         animator.SetBool("canMove", true);
 
         distance = Mathf.Abs(target.transform.position.x - rigidBody.position.x);
-        Debug.Log("DISTANCE: " + distance);
 
 
         if (distance <= offsetDistance)
@@ -196,8 +191,22 @@ public class EnemyBehaviour : MonoBehaviour
 
         animator.SetBool("canMove", false);
         animator.SetBool("Attack", true);
+    }
 
-        Debug.Log("Player was ATTACKED");
+    public void DealDamage()
+    {
+        if (target == null)
+        {
+            return;
+        }
+
+        float dist = Vector2.Distance(transform.position, target.transform.position);
+
+        if (dist <= attackDistance)
+        {
+            target.GetComponent<PlayerStats>()?.TakeDamage(damage);
+            Debug.Log("Snake dealt damage");
+        }
     }
 
     void StopAttack()

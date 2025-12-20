@@ -4,12 +4,12 @@ public class HitBox : MonoBehaviour
 {
     public int damage = 1;
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D trigger)
     {
-        if (other.CompareTag("Player"))
+        if (trigger.CompareTag("Player"))
         {
-            // Deal damage ONCE
-            
+            Debug.Log("Player was attacked.");
+            trigger.GetComponent<PlayerStats>()?.TakeDamage(damage);
         }
     }
 }

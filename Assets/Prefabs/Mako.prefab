@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 3017771237620448440}
   - component: {fileID: 5638958799715150046}
   - component: {fileID: 4855088145536691225}
+  - component: {fileID: 4465070734529089250}
   m_Layer: 6
   m_Name: Mako
   m_TagString: Player
@@ -248,6 +249,8 @@ MonoBehaviour:
   DashTimer: 0.25
   HorizontalRayCount: 24
   VerticalRayCount: 12
+  AttackCooldown: 0.5
+  AttackVelocityCap: 1
   BodyCollider: {fileID: 3591376162720135472}
   SolidLayerMask:
     serializedVersion: 2
@@ -259,3 +262,22 @@ MonoBehaviour:
   m_verticalInputAction: 1
   m_dashing: 0
   m_dashTimer: 0
+  m_attacking: 0
+  m_attackCooldown: 0
+--- !u!114 &4465070734529089250
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5453385910474987739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f358f70cc68a1414f83739cba9270aee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
+  maxLives: 9
+  currentLives: 0
+  potionCount: 5
+  baseHealing: 1
+  additiveHealingBuff: 0

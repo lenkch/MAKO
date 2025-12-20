@@ -54,16 +54,18 @@ public class PlayerStats : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentLives -= damage;
+        Debug.Log("Player took damage: " + damage + " Current lives: " + currentLives);
 
         if (currentLives <= 0)
         {
             currentLives = 0;
-            // you died
-            // death animation and menu screen or whatever
-            // asi pridat animator neskor
+            
+            PlayerDie();
         }
 
         OnLivesChanged?.Invoke();
+
+        
     }
 
     private void onUsePotionPress(InputAction.CallbackContext context)
@@ -94,5 +96,10 @@ public class PlayerStats : MonoBehaviour
         }
 
         OnLivesChanged?.Invoke();
+    }
+
+    void PlayerDie()
+    {
+        Debug.Log("Player died.");
     }
 }
