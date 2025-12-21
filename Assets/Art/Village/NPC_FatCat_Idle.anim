@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Enemy Snake Attack
+  m_Name: NPC_FatCat_Idle
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -21,19 +21,15 @@ AnimationClip:
   - serializedVersion: 2
     curve:
     - time: 0
-      value: {fileID: 1484784951829066, guid: e1c344c795d0e62409a41a04de16178e, type: 3}
-    - time: 0.1
-      value: {fileID: -29799746214777801, guid: ed1254dab53ffc84291bd41623457822, type: 3}
-    - time: 0.2
-      value: {fileID: -1096340594084518304, guid: ed1254dab53ffc84291bd41623457822, type: 3}
-    - time: 0.3
-      value: {fileID: -1328896022726012483, guid: ed1254dab53ffc84291bd41623457822, type: 3}
+      value: {fileID: 718412935164477778, guid: cd20fda717986aa498ad63203164de5c, type: 3}
+    - time: 0.5
+      value: {fileID: 1276105868703773532, guid: cd20fda717986aa498ad63203164de5c, type: 3}
     attribute: m_Sprite
-    path: Enemy Snake Sprite
+    path: 
     classID: 212
     script: {fileID: 0}
     flags: 2
-  m_SampleRate: 10
+  m_SampleRate: 2
   m_WrapMode: 0
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
@@ -41,7 +37,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 2085873761
+      path: 0
       attribute: 0
       script: {fileID: 0}
       typeID: 212
@@ -50,16 +46,14 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     pptrCurveMapping:
-    - {fileID: 1484784951829066, guid: e1c344c795d0e62409a41a04de16178e, type: 3}
-    - {fileID: -29799746214777801, guid: ed1254dab53ffc84291bd41623457822, type: 3}
-    - {fileID: -1096340594084518304, guid: ed1254dab53ffc84291bd41623457822, type: 3}
-    - {fileID: -1328896022726012483, guid: ed1254dab53ffc84291bd41623457822, type: 3}
+    - {fileID: 718412935164477778, guid: cd20fda717986aa498ad63203164de5c, type: 3}
+    - {fileID: 1276105868703773532, guid: cd20fda717986aa498ad63203164de5c, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.4
+    m_StopTime: 1
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -78,25 +72,4 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events:
-  - time: 0.1
-    functionName: EnableHitbox
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.2
-    functionName: DisableHitbox
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.3
-    functionName: SetAttackOnCooldown
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
+  m_Events: []

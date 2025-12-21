@@ -68,6 +68,7 @@ private bool isGrounded;
 
         if (isInRange)
         {
+            // actually to uz nepouzivame ale bolo to sucastou logiky nasledovania hraca xd
             hit = Physics2D.Raycast(raycast.position, direction, raycastLength, raycastMask);
             RaycastDebugger();
         }
@@ -280,7 +281,7 @@ private bool isGrounded;
 
     public void DestroyEnemy()
     {
-        Debug.Log("Destroy called");
+        //Debug.Log("Destroy called");
         Destroy(gameObject, 10f);
     }
 
