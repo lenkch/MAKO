@@ -3,11 +3,14 @@ using UnityEngine;
 
 public class CameraTarget : MonoBehaviour
 {
-    public float HorizontalDistanceMultiplier = 16.0f;
-    public float HorizontalSpeed = 3.0f;
+    public float HorizontalDistanceMultiplier = 2.0f;
+    public float HorizontalSpeed = 6.0f;
+    public float VerticalSpeed = 3.0f;
+    public float VerticalOffset = 1.5f;
     public GameObject Mako;
     private Vector3 m_target;
     private MakoSimplifiedMovement m_makoMovement;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,23 +20,29 @@ public class CameraTarget : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var diff = Mako.transform.position - transform.position;
-        //Debug.Log(diff);
-
-        if (Mathf.Abs(diff.x) > 1.0f)
-        {
-            m_target = Mako.transform.position;
-            m_target.x += Mathf.Sign(m_makoMovement.TargetGroundVelocity) * HorizontalDistanceMultiplier * Time.deltaTime;
-        }
-
-        var newDiff = m_target.x - transform.position.x;
-        if (Mathf.Abs(newDiff) > HorizontalSpeed * Time.deltaTime)
-        {
-            transform.Translate(Mathf.Sign(newDiff) * HorizontalSpeed * Time.deltaTime, 0, 0);    
-        }
     }
 
     void FixedUpdate()
     {
+        m_target = Mako.transform.position;
+        //if (Mathf.Abs(m_makoMovement.Velocity.x) > 0.5f && Mathf.Abs(m_makoMovement.TargetGroundVelocity) > (3.0f * m_makoMovement.WalkingSpeed / 4.0f) * Time.fixedDeltaTime)
+        //    m_target.x += (m_makoMovement.LastHorizontalInputAction == HorizontalInputAction.MoveLeft ? -1 : 1) * HorizontalDistanceMultiplier;
+
+        var diff = m_target - transform.position;
+        if (Mathf.Abs(diff.x) > HorizontalSpeed * Time.fixedDeltaTime)
+        {
+            //var lerped = Mathf.Lerp(transform.position.x, m_target.x, HorizontalSpeed * Time.deltaTime);
+            var dx = Mathf.Sign(diff.x) * HorizontalSpeed * Time.fixedDeltaTime;
+            transform.Translate(dx, 0, 0);    
+        }
+
+        // Track last stood on position.
+        var dy = VerticalSpeed * Time.fixedDeltaTime;
+        var ty = m_makoMovement.LastGroundY + VerticalOffset;
+        if (Mathf.Abs(transform.position.y - ty) > VerticalSpeed * Time.fixedDeltaTime)
+        {
+            var sign = Mathf.Sign(ty - transform.position.y);
+            transform.Translate(0, sign * dy, 0);
+        }
     }
 }

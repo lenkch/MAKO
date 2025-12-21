@@ -94,11 +94,13 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
 
     // Properties.
     public HorizontalInputAction HorizontalInputAction { get { return m_horizontalInputAction; } }
+    public HorizontalInputAction LastHorizontalInputAction { get { return m_lastHorizontalInputAction; } }
     public VerticalInputAction VerticalInputAction { get { return m_verticalInputAction; } }
     public bool IsGrounded { get { return m_grounded; }}
     public Vector2 Velocity { get { return m_velocity; }}
     public float TargetGroundVelocity { get { return m_targetGroundVelocity; }}
     public MakoState State { get { return m_state; } }
+    public float LastGroundY { get { return m_lastGroundY; }}
 
     // Implied component references.
     private Rigidbody2D m_rigidBody;
@@ -108,7 +110,7 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
 
     private bool m_climbingSlope = false;
     private float m_slopeAngle = 0.0f;
-
+    [SerializeField, SerializeAs("Last Ground Y")] private float m_lastGroundY = 0.0f;
 
     [SerializeField, SerializeAs("Mako State")] private MakoState m_state;
 
@@ -270,7 +272,7 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
             {
                 distance = hit.distance;
                 rawVelocity.y = direction * (hit.distance - OuterSkin) / Time.fixedDeltaTime;
-                
+                m_lastGroundY = hit.point.y;
                 grounded = !m_climbingSlope ? direction < 0 : m_climbingSlope;
             }
         }
@@ -306,6 +308,7 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
         {
             // Update immediately.
             m_grounded = true;
+            
         }
 
     }
@@ -419,7 +422,7 @@ public partial class MakoSimplifiedMovement
     }
     void deinitState_RunAround()
     {
-        
+        m_targetGroundVelocity = 0.0f;
     }
     void updateState_RunAround()
     {
@@ -591,6 +594,7 @@ public partial class MakoSimplifiedMovement
     {
         m_velocity = WallJumpSpeed * Time.fixedDeltaTime;
         m_velocity.x *= -m_wallDirection;
+        m_lastGroundY = transform.position.y;
         switchState(MakoState.RunAround);
     }
     void enableState_WallSlide()
