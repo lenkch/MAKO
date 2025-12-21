@@ -18,9 +18,6 @@ public class LivesUI : MonoBehaviour
     {
         yield return null;
 
-        Debug.Log("LivesUI: Start() playerStats = " + playerStats);
-
-
         maxLives = playerStats.maxLives; 
         playerStats.OnLivesChanged += UpdatePlayerLives;
 

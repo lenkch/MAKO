@@ -22,7 +22,8 @@ public enum MakoState
     RunAround,
     Attack,
     WallSlide,
-    Dashing
+    Dashing,
+    Knockback
 }
 public enum MakoWallSlideState
 {
@@ -45,10 +46,10 @@ struct MakoGraphicsPacket
 public partial class MakoSimplifiedMovement : MonoBehaviour
 {
     // Constants, modifiable in editor.
-    public float WalkingSpeed = 300.0f;
+    public float WalkingSpeed = 7.0f;
     public float GroundAcceleration = 10.0f;
     public float GroundDecceleration = 8.0f;
-    public float JumpingSpeed = 455.0f;
+    public float JumpingSpeed = 9.0f;
     public float Gravity = -20.0f;
     public float MaxDownwardsVelocity = -1000.0f;
 
@@ -62,10 +63,10 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
     public float AttackCooldown = 0.5f;
     public float AttackVelocityCap = 1.0f;
     public float WallStuckTimer = 0.5f;
-    public Vector2 WallJumpSpeed = new Vector2(600.0f, 400.0f);
-    public float WallSlideSpeed = 30.0f;
-    public float WallSlideNegativeInputMultiplier = 0.03f;
-    public float WallSlideNegativeInputCorrectionSpeed = 0.7f;
+    public Vector2 WallJumpSpeed = new Vector2(8.0f, 7.0f);
+    public float WallSlideSpeed = 2.0f;
+    public float WallSlideNegativeInputMultiplier = 0.02f;
+    public float WallSlideNegativeInputCorrectionSpeed = 0.4f;
 
     // References that must be set in editor.
     public Collider2D BodyCollider;
@@ -473,16 +474,16 @@ public partial class MakoSimplifiedMovement
             if (m_grounded)
             {
                 m_graphicsPacket.Jumping = true;
-                m_velocity.y = JumpingSpeed * Time.fixedDeltaTime;
+                m_velocity.y = JumpingSpeed;
             }
         }
 
         m_horizontalInputMultipliers.x = Mathf.Lerp(m_horizontalInputMultipliers.x, 1.0f, WallSlideNegativeInputCorrectionSpeed * Time.fixedDeltaTime);
         m_horizontalInputMultipliers.y = Mathf.Lerp(m_horizontalInputMultipliers.y, 1.0f, WallSlideNegativeInputCorrectionSpeed * Time.fixedDeltaTime);
         // Apply horizontal and vertical acceleration.
-        m_velocity.x = Mathf.Lerp(m_velocity.x, m_targetGroundVelocity * Time.fixedDeltaTime, ((m_targetGroundVelocity * Time.fixedDeltaTime < m_velocity.x) ? GroundDecceleration : GroundAcceleration) * Time.fixedDeltaTime);
+        m_velocity.x = Mathf.Lerp(m_velocity.x, m_targetGroundVelocity, ((m_targetGroundVelocity < m_velocity.x) ? GroundDecceleration : GroundAcceleration) * Time.fixedDeltaTime);
         m_velocity.y += (Gravity + ((m_verticalInputAction == VerticalInputAction.JumpReleased) ? JumpReleaseExtraGravity : 0.0f)) * Time.fixedDeltaTime;
-        m_velocity.y = Mathf.Max(m_velocity.y, MaxDownwardsVelocity * Time.fixedDeltaTime);
+        m_velocity.y = Mathf.Max(m_velocity.y, MaxDownwardsVelocity);
 
         // Apply collisions and velocity.
         horizontalCollisions(m_rigidBody.position, ref m_velocity);
@@ -593,6 +594,38 @@ public partial class MakoSimplifiedMovement
     }
 }
 
+// Knockback state.
+public partial class MakoSimplifiedMovement
+{
+    void enableState_Knockback()
+    {
+    }
+    void disableState_Knockback()
+    {
+        
+    }
+    void initState_Knockback()
+    {
+    }
+    void deinitState_Knockback()
+    {
+    }
+    void updateState_Knockback()
+    {
+        
+    }
+    void fixedUpdateState_Knockback()
+    {
+        m_velocity.x = Mathf.Clamp(m_velocity.x, -AttackVelocityCap, AttackVelocityCap);
+        
+        // Apply collisions and velocity.
+        horizontalCollisions(m_rigidBody.position, ref m_velocity);
+        verticalCollisions(m_rigidBody.position, ref m_velocity);
+        
+        // Apply new position.
+        m_rigidBody.MovePosition(m_rigidBody.position + m_velocity * Time.fixedDeltaTime);
+    }
+}
 
 // Attack state.
 public partial class MakoSimplifiedMovement
@@ -603,7 +636,7 @@ public partial class MakoSimplifiedMovement
 
     private void onJumpPress_WallSlide(InputAction.CallbackContext context)
     {
-        m_velocity = WallJumpSpeed * Time.fixedDeltaTime;
+        m_velocity = WallJumpSpeed;
         m_velocity.x *= -m_wallDirection;
         m_lastHorizontalInputAction = (m_lastHorizontalInputAction == HorizontalInputAction.MoveRight) ? HorizontalInputAction.MoveLeft : HorizontalInputAction.MoveRight;
 
@@ -672,7 +705,7 @@ public partial class MakoSimplifiedMovement
     {
         if (m_wallSlideState == MakoWallSlideState.WallSlide)
         {
-            m_velocity.y = -WallSlideSpeed * Time.fixedDeltaTime;
+            m_velocity.y = -WallSlideSpeed;
             m_lastGroundY = m_rigidBody.position.y;
         }
 
