@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 6442266023876770759}
   - component: {fileID: 1409295387742016619}
   - component: {fileID: 8510556286369075834}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Hit Box
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
@@ -656,7 +656,7 @@ GameObject:
   - component: {fileID: 2685250568301077285}
   - component: {fileID: 7077226953249513383}
   - component: {fileID: 8489656761907383564}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: 'Trigger Area '
   m_TagString: Untagged
   m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}

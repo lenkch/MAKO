@@ -66,6 +66,7 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
 
     // References that must be set in editor.
     public Collider2D BodyCollider;
+    public Collider2D ClawHitbox;
     public LayerMask SolidLayerMask;
 
     // Physics variables.
@@ -662,5 +663,15 @@ public partial class MakoSimplifiedMovement
         {
             switchState(MakoState.RunAround);
         }
+    }
+
+    public void EnableClawHitbox()
+    {
+        ClawHitbox.enabled = true;
+    }
+
+    public void DisableClawHitbox()
+    {
+        ClawHitbox.enabled = false;
     }
 }

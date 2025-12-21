@@ -20,6 +20,7 @@ public class EnemyHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        Debug.Log("Enemy take damage: " + damage);
         if (isDead)
         {
             return;

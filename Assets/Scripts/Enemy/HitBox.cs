@@ -8,7 +8,6 @@ public class HitBox : MonoBehaviour
     {
         if (trigger.CompareTag("Player"))
         {
-            Debug.Log("Player was attacked.");
             trigger.GetComponent<PlayerStats>()?.TakeDamage(damage);
         }
     }
