@@ -79,7 +79,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 125847821229807754, guid: ed1254dab53ffc84291bd41623457822, type: 3}
+  m_Sprite: {fileID: -7943991926185158373, guid: 52202a3534de8694b81fb05ce39daec3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -412,6 +412,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0da04d6a7f51dc6448ab53b7f3ee0f20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  maxEnemyHealth: 5
+  currentEnemyHealth: 0
+  OnHealthChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4554596894634930213
 GameObject:
   m_ObjectHideFlags: 0
@@ -894,6 +902,7 @@ GameObject:
   - component: {fileID: 9200188457127271929}
   - component: {fileID: 2479861713279773146}
   - component: {fileID: 5019642500087399137}
+  - component: {fileID: 7019698897897582257}
   m_Layer: 5
   m_Name: Health Canvas
   m_TagString: Untagged
@@ -1014,3 +1023,22 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &7019698897897582257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9087699664799429949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e4df98bc3a9d974aa49ea1250e8bb55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyLivesUI
+  enemyHealth: {fileID: 8181932900089250032}
+  lifeIcons:
+  - {fileID: 3930906582940620086}
+  - {fileID: 5886754389597456510}
+  - {fileID: 6938009342051849950}
+  - {fileID: 1889799210774755259}
+  - {fileID: 6372919522561802427}

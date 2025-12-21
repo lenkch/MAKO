@@ -33,6 +33,7 @@ public class EnemyBehaviour : MonoBehaviour
     private bool isInRange;     // ci je hrac in range pre utok
     private bool isAttackOnCooldown; // ci je stale cooldown po utoku 
     private float intTimer;
+    private bool isDead = false;
 
     private Rigidbody2D rigidBody; 
     private Vector2 targetMovePosition;
@@ -47,6 +48,8 @@ public class EnemyBehaviour : MonoBehaviour
         animator = GetComponent<Animator>();
 
         rigidBody = GetComponent<Rigidbody2D>(); 
+
+        GetComponent<EnemyHealth>().OnDeath.AddListener(OnDeath);
     }
 
     void Update()
@@ -236,6 +239,28 @@ public class EnemyBehaviour : MonoBehaviour
         timer = intTimer;
 
         animator.SetBool("Attack", false);
+    }
+
+    void OnDeath()
+    {
+        if (isDead)
+        {
+            return;
+        }
+
+        isDead = true;
+
+        animator.SetTrigger("Die");
+
+        // disable vsetky collidery (ci to je jedno dunno?) a pohyb
+        rigidBody.linearVelocity = Vector2.zero; 
+        rigidBody.simulated = false;
+    }
+
+    public void DestroyEnemy()
+    {
+        Debug.Log("Destroy called");
+        Destroy(gameObject, 10f);
     }
 
     void RaycastDebugger()

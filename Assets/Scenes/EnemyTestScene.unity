@@ -1331,9 +1331,89 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1415487766407173062, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1415487766407173062, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1415487766407173062, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1415487766407173062, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1991221551838718106, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1991221551838718106, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1991221551838718106, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1991221551838718106, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3539179537608918661, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3539179537608918661, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3539179537608918661, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3539179537608918661, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3986115900604693466, guid: f437f54480a456f4ca10250c9037586b, type: 3}
       propertyPath: m_Name
       value: EnemySnake
+      objectReference: {fileID: 0}
+    - target: {fileID: 4524858102898272426, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4524858102898272426, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4524858102898272426, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4524858102898272426, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5602798448284320995, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5602798448284320995, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5602798448284320995, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5602798448284320995, guid: f437f54480a456f4ca10250c9037586b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8015649278026968615, guid: f437f54480a456f4ca10250c9037586b, type: 3}
       propertyPath: raycastMask.m_Bits
