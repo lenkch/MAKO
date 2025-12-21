@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   speed: 8
-  resetY: -10
+  resetY: -5
   startY: 10
 --- !u!114 &8112548589401004701
 MonoBehaviour:
@@ -225,5 +225,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   speed: 3
-  leftLimitX: 0
-  resetX: 0
+  leftBound: {fileID: 0}
+  rightBound: {fileID: 0}

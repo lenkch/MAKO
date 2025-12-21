@@ -31,7 +31,7 @@ public class LevelGenerator : MonoBehaviour
         {
             RoomData pickedRoom = matchingRooms[Random.Range(0, matchingRooms.Count)];
             selectedRooms.Add(pickedRoom);
-            matchingRooms.Remove(pickedRoom);
+            rooms.Remove(pickedRoom);
             currentHeight = pickedRoom.exitHeight;
         }
         else
