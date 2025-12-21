@@ -329,6 +329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f358f70cc68a1414f83739cba9270aee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
+  movementBehaviour: {fileID: 4855088145536691225}
   maxLives: 9
   currentLives: 0
   potionCount: 5

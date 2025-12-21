@@ -295,6 +295,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2116192881392755296, guid: ff3492fc52012a44aafaa091a0fd7528, type: 3}
+      propertyPath: PlayerStats
+      value: 
+      objectReference: {fileID: 1458707136}
     - target: {fileID: 2527535614959270449, guid: ff3492fc52012a44aafaa091a0fd7528, type: 3}
       propertyPath: m_Name
       value: InGameUI
@@ -487,6 +491,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7920238139804296189, guid: ff3492fc52012a44aafaa091a0fd7528, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8230720801907964595, guid: ff3492fc52012a44aafaa091a0fd7528, type: 3}
       propertyPath: playerStats
       value: 
@@ -512,6 +520,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ff3492fc52012a44aafaa091a0fd7528, type: 3}
+--- !u!4 &1302279812 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8521935557659328568, guid: 8df57d6d50e894010b7f3359f32130a8, type: 3}
+  m_PrefabInstance: {fileID: 2010996618}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1427938726
 GameObject:
   m_ObjectHideFlags: 0
@@ -666,11 +679,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5453385910474987739, guid: 6c3297b1207cbaf08acbef1734be09a1, type: 3}
   m_PrefabInstance: {fileID: 34357735}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1624819973 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4236452812011155958, guid: 6c3297b1207cbaf08acbef1734be09a1, type: 3}
-  m_PrefabInstance: {fileID: 34357735}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1754556842
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -722,7 +730,7 @@ PrefabInstance:
     - target: {fileID: 3276631265394016343, guid: 2c3a19d57ee25de8a999aa1e019f64cd, type: 3}
       propertyPath: FollowTransform
       value: 
-      objectReference: {fileID: 1624819973}
+      objectReference: {fileID: 1302279812}
     - target: {fileID: 8441817501467709073, guid: 2c3a19d57ee25de8a999aa1e019f64cd, type: 3}
       propertyPath: m_Name
       value: Camera
