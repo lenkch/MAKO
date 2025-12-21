@@ -16,8 +16,7 @@ public class MainMenu : MonoBehaviour
 
     public void Play() 
     {
-        Debug.Log("Main Menu -  Play Button pressed");
-        SceneManager.LoadScene("MakoTesting");
+        SceneManager.LoadScene("Community Scene");
     }
 
     public void Options() 
