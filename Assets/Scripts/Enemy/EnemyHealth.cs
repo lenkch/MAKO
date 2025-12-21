@@ -15,6 +15,7 @@ public class EnemyHealth : MonoBehaviour
     void Awake()
     {
         currentEnemyHealth = maxEnemyHealth;
+        Debug.Log("Enemy Health awake, curr health: " + currentEnemyHealth);
     }
 
     public void TakeDamage(int damage)

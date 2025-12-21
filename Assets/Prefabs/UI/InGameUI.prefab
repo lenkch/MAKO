@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f242390ee249494588ef150896b5cb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthPotionUI
-  playerStats: {fileID: 0}
+  playerStats: {fileID: 2435732859976479239, guid: 6c3297b1207cbaf08acbef1734be09a1, type: 3}
   potionCounterText: {fileID: 7181478409327184561}
 --- !u!1 &2527535614959270449
 GameObject:
@@ -794,6 +794,10 @@ PrefabInstance:
       propertyPath: emptyLive
       value: 
       objectReference: {fileID: 2610814736847596634, guid: 6431a06ef76cc52499636e824651f373, type: 3}
+    - target: {fileID: 5288395905693036225, guid: 31babb8bdd9262246923edeaddbdbd95, type: 3}
+      propertyPath: playerStats
+      value: 
+      objectReference: {fileID: 2435732859976479239, guid: 6c3297b1207cbaf08acbef1734be09a1, type: 3}
     - target: {fileID: 5320106006871502692, guid: 31babb8bdd9262246923edeaddbdbd95, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

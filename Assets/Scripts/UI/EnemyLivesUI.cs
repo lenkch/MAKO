@@ -7,7 +7,7 @@ public class EnemyLivesUI : MonoBehaviour
     public EnemyHealth enemyHealth;
     public List<Image> lifeIcons; 
 
-    void OnEnable()
+    void Start()
     {
         if (enemyHealth != null)
         {
@@ -27,6 +27,7 @@ public class EnemyLivesUI : MonoBehaviour
 
     void UpdateEnemyLives()
     {
+        Debug.Log("Update enemy lives, current: " +  enemyHealth.currentEnemyHealth);
 
         for (int i = 0; i < enemyHealth.maxEnemyHealth; i++)
         {
