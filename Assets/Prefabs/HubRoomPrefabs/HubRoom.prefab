@@ -100,6 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7593401123034745164}
   - component: {fileID: 4522861290539050164}
+  - component: {fileID: 7602046487902664277}
   m_Layer: 0
   m_Name: NpcOldCat
   m_TagString: Untagged
@@ -166,8 +167,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 2026247433
-  m_SortingLayer: -1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 4
   m_Sprite: {fileID: -4594089166855227865, guid: 90bea10f3ba566f4389e68678cf56c03, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -180,6 +181,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &7602046487902664277
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 914527771783204252}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6b34ae51632228e49b6aada8495c7b31, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1082407407366058926
 GameObject:
   m_ObjectHideFlags: 0
@@ -3063,7 +3086,7 @@ Tilemap:
       - {fileID: -1700922650, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -1118153621, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -678493064, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
-      m_AnimationSpeed: 3
+      m_AnimationSpeed: 3.0000002
       m_AnimationTimeOffset: 0
       m_Flags: 16
   - first: {x: -26, y: -15, z: 0}
@@ -3143,7 +3166,7 @@ Tilemap:
       - {fileID: -1700922650, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -1118153621, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -678493064, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
-      m_AnimationSpeed: 3.0000002
+      m_AnimationSpeed: 3
       m_AnimationTimeOffset: 0
       m_Flags: 16
   - first: {x: -18, y: -15, z: 0}
@@ -3173,7 +3196,7 @@ Tilemap:
       - {fileID: -1700922650, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -1118153621, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -678493064, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
-      m_AnimationSpeed: 3.0000002
+      m_AnimationSpeed: 3
       m_AnimationTimeOffset: 0
       m_Flags: 16
   - first: {x: -15, y: -15, z: 0}
@@ -3193,7 +3216,7 @@ Tilemap:
       - {fileID: -1700922650, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -1118153621, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -678493064, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
-      m_AnimationSpeed: 3.0000002
+      m_AnimationSpeed: 3
       m_AnimationTimeOffset: 0
       m_Flags: 16
   - first: {x: -13, y: -15, z: 0}
@@ -3213,7 +3236,7 @@ Tilemap:
       - {fileID: -1700922650, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -1118153621, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -678493064, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
-      m_AnimationSpeed: 3
+      m_AnimationSpeed: 3.0000002
       m_AnimationTimeOffset: 0
       m_Flags: 16
   - first: {x: -11, y: -15, z: 0}
@@ -3283,7 +3306,7 @@ Tilemap:
       - {fileID: -1700922650, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -1118153621, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -678493064, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
-      m_AnimationSpeed: 3
+      m_AnimationSpeed: 3.0000002
       m_AnimationTimeOffset: 0
       m_Flags: 16
   - first: {x: -4, y: -15, z: 0}
@@ -3313,7 +3336,7 @@ Tilemap:
       - {fileID: -1700922650, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -1118153621, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -678493064, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
-      m_AnimationSpeed: 3
+      m_AnimationSpeed: 3.0000002
       m_AnimationTimeOffset: 0
       m_Flags: 16
   - first: {x: -1, y: -15, z: 0}
@@ -3323,7 +3346,7 @@ Tilemap:
       - {fileID: -1700922650, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -1118153621, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -678493064, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
-      m_AnimationSpeed: 3.0000002
+      m_AnimationSpeed: 3
       m_AnimationTimeOffset: 0
       m_Flags: 16
   - first: {x: 0, y: -15, z: 0}
@@ -3463,7 +3486,7 @@ Tilemap:
       - {fileID: -1700922650, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -1118153621, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -678493064, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
-      m_AnimationSpeed: 3
+      m_AnimationSpeed: 3.0000002
       m_AnimationTimeOffset: 0
       m_Flags: 16
   - first: {x: 14, y: -15, z: 0}
@@ -3483,7 +3506,7 @@ Tilemap:
       - {fileID: -1700922650, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -1118153621, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
       - {fileID: -678493064, guid: 10c64ed7890290f4d9acae1a3f64d2ac, type: 3}
-      m_AnimationSpeed: 3.0000002
+      m_AnimationSpeed: 3
       m_AnimationTimeOffset: 0
       m_Flags: 16
   - first: {x: 16, y: -15, z: 0}
@@ -3917,7 +3940,7 @@ Transform:
   m_GameObject: {fileID: 5442419713293275926}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.25, y: -0.85, z: 0}
+  m_LocalPosition: {x: 1.635, y: -0.836, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4455,6 +4478,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3957980521943535424}
   - component: {fileID: 5387777452023944822}
+  - component: {fileID: 6402315146122088475}
   m_Layer: 0
   m_Name: NpcFatCat
   m_TagString: Untagged
@@ -4471,7 +4495,7 @@ Transform:
   m_GameObject: {fileID: 8437630313104123518}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -14.39, y: -9.39, z: 0}
+  m_LocalPosition: {x: -14.38, y: -9.39, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4523,7 +4547,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 2026247433
   m_SortingLayer: -1
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_Sprite: {fileID: 718412935164477778, guid: cd20fda717986aa498ad63203164de5c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -4535,6 +4559,28 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &6402315146122088475
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8437630313104123518}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5a9a312f05dd9b043bf4ccb91bf91d0f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8450466321573986562
 GameObject:
   m_ObjectHideFlags: 0
@@ -4580,6 +4626,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8600116264222064832}
   - component: {fileID: 5305710196927278291}
+  - component: {fileID: 2270614017417910311}
   m_Layer: 0
   m_Name: NpcGirlCat
   m_TagString: Untagged
@@ -4596,7 +4643,7 @@ Transform:
   m_GameObject: {fileID: 9111260366323659271}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.09, y: -9.32, z: 0}
+  m_LocalPosition: {x: -6.37, y: -9.3, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4648,7 +4695,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 2026247433
   m_SortingLayer: -1
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_Sprite: {fileID: -7855178721049653306, guid: 5179e5671ee15e94580b8b30f25ea93d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -4660,3 +4707,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &2270614017417910311
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9111260366323659271}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 58a6d09f4b058e945b4abe98c26282f5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
