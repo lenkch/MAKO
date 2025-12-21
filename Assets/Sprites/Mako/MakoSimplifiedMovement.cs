@@ -128,6 +128,8 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
 
     public void Knockback(Vector3 position)
     {
+        if (m_state == MakoState.Dead)
+            return;
         if (transform.position.x < position.x)
         {
             m_knockbackDirection = -1;

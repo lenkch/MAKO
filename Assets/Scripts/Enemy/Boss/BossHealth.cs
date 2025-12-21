@@ -8,6 +8,8 @@ public class BossHealth : MonoBehaviour
 
     public UnityEvent OnHealthChanged;
     public UnityEvent OnDeath; 
+    public GameObject OnBossDeath; 
+
 
     private Animator animator; 
 
@@ -17,6 +19,10 @@ public class BossHealth : MonoBehaviour
     {
         currentBossHealth = maxBossHealth;
         animator = GetComponent<Animator>();
+        if (OnBossDeath != null)
+    {
+        OnBossDeath.SetActive(false);
+    }
     }
 
     public void TakeDamage(int damage)
@@ -53,5 +59,11 @@ public class BossHealth : MonoBehaviour
         transform.rotation = Quaternion.Euler(0f, 0f, 90f);
 
         OnDeath?.Invoke();
+        
+        if (OnBossDeath != null)
+    {
+        OnBossDeath.SetActive(true);
+    }
+        
     }
 }

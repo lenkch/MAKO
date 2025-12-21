@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerStats : MonoBehaviour
 {
+    public MakoSimplifiedMovement movementBehaviour;
     // control actions
     private MakoInputActions inputActions;
     private InputAction usePotionAction;
@@ -23,6 +24,9 @@ public class PlayerStats : MonoBehaviour
 
     public delegate void PotionsChanged();
     public event PotionsChanged OnPotionsChanged; 
+
+    public delegate void DeathTriggered();
+    public event DeathTriggered OnDeathTriggered;
 
     private void Awake()
     {
@@ -101,5 +105,7 @@ public class PlayerStats : MonoBehaviour
     void PlayerDie()
     {
         Debug.Log("Player died.");
+        movementBehaviour.Die();
+        OnDeathTriggered?.Invoke();
     }
 }
