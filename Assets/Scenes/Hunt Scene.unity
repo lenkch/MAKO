@@ -645,7 +645,6 @@ MonoBehaviour:
   - {fileID: 2331754570911855978, guid: a132061b7836b0340a23969564b88690, type: 3}
   - {fileID: 97578375336882186, guid: 6dbd2eb2f9f7a85439e28e3c159756aa, type: 3}
   - {fileID: -212513866633922805, guid: 26e0ffa867a9a8246840f14a31ab70d4, type: 3}
-  - {fileID: 8241349964947952147, guid: 94a600df4a836ce43a97934d46a7cc33, type: 3}
   - {fileID: 97578375336882186, guid: 7feee09bf427b4546904de051b75e488, type: 3}
   - {fileID: 97578375336882186, guid: 5e3fcb77b3d9d3b45928a9b4e4456ebf, type: 3}
   - {fileID: 8241349964947952147, guid: 79ac95cf6b7674d4db2f85b39c273f2f, type: 3}
@@ -665,6 +664,11 @@ MonoBehaviour:
 --- !u!1 &1624819967 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5453385910474987739, guid: 6c3297b1207cbaf08acbef1734be09a1, type: 3}
+  m_PrefabInstance: {fileID: 34357735}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1624819973 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4236452812011155958, guid: 6c3297b1207cbaf08acbef1734be09a1, type: 3}
   m_PrefabInstance: {fileID: 34357735}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1754556842
@@ -718,7 +722,7 @@ PrefabInstance:
     - target: {fileID: 3276631265394016343, guid: 2c3a19d57ee25de8a999aa1e019f64cd, type: 3}
       propertyPath: FollowTransform
       value: 
-      objectReference: {fileID: 2010996619}
+      objectReference: {fileID: 1624819973}
     - target: {fileID: 8441817501467709073, guid: 2c3a19d57ee25de8a999aa1e019f64cd, type: 3}
       propertyPath: m_Name
       value: Camera
@@ -789,11 +793,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8df57d6d50e894010b7f3359f32130a8, type: 3}
---- !u!4 &2010996619 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8521935557659328568, guid: 8df57d6d50e894010b7f3359f32130a8, type: 3}
-  m_PrefabInstance: {fileID: 2010996618}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
