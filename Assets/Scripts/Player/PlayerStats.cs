@@ -54,7 +54,7 @@ public class PlayerStats : MonoBehaviour
     public void TakeDamage(int damage)
     {
         currentLives -= damage;
-        Debug.Log("Player took damage: " + damage + " Current lives: " + currentLives);
+        //Debug.Log("Player took damage: " + damage + " Current lives: " + currentLives);
 
         if (currentLives <= 0)
         {
