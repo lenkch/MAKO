@@ -592,11 +592,11 @@ public partial class MakoSimplifiedMovement
 {
     void enableState_Dashing()
     {
-        
+        m_inputJump.performed += onJumpPress_Dashing;
     }
     void disableState_Dashing()
     {
-        
+        m_inputJump.performed -= onJumpPress_Dashing;
     }
     void initState_Dashing()
     {
@@ -611,6 +611,14 @@ public partial class MakoSimplifiedMovement
     {
         
     }
+    private void onJumpPress_Dashing(InputAction.CallbackContext context)
+    {
+        m_verticalInputAction = VerticalInputAction.JumpPressed;
+        m_velocity.y = JumpingSpeed;
+        m_graphicsPacket.Jumping = true;
+        switchState(MakoState.RunAround);
+    }
+
     void fixedUpdateState_Dashing()
     {
         m_dashTimer -= Time.fixedDeltaTime;
