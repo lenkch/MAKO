@@ -861,6 +861,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CameraTarget
       objectReference: {fileID: 0}
+    - target: {fileID: 3844523013094603836, guid: 8df57d6d50e894010b7f3359f32130a8, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 7539233319078822155, guid: 8df57d6d50e894010b7f3359f32130a8, type: 3}
       propertyPath: Mako
       value: 
