@@ -256,6 +256,8 @@ MonoBehaviour:
   WallSlideSpeed: 2
   WallSlideNegativeInputMultiplier: 0.02
   WallSlideNegativeInputCorrectionSpeed: 0.4
+  KnockbackSpeed: 3
+  KnockbackTimer: 0.3
   BodyCollider: {fileID: 3591376162720135472}
   ClawHitbox: {fileID: 1135734937128361988}
   SolidLayerMask:
@@ -273,7 +275,11 @@ MonoBehaviour:
   m_lastGroundY: 0
   m_state: 0
   m_wallDirection: 0
+  m_wallLastRay: 0
+  m_knockbackTimer: 0
+  m_knockbackDirection: 1
   m_wallStuckTimer: 0
+  m_wallSlideState: 0
 --- !u!70 &8942921593737115012
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -308,8 +314,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 1}
+  m_Offset: {x: 0.010244131, y: 0}
+  m_Size: {x: 0.46321154, y: 1}
   m_Direction: 0
 --- !u!114 &2435732859976479239
 MonoBehaviour:
