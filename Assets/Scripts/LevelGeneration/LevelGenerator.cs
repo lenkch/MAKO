@@ -81,14 +81,6 @@ public class LevelGenerator : MonoBehaviour
         float placeX = nextPosition.x - (tilemapLocalOffset.x + leftBottomLocal.x);
         float placeY = baselineWorldY - (tilemapLocalOffset.y + entryLocal.y);
 
-        if (debugPlacement)
-        {
-            Debug.Log($"[LevelGenerator] Room '{room.name}' idx={i}");
-            Debug.Log($"  tilemapLocalOffset={tilemapLocalOffset}");
-            Debug.Log($"  entryLocal={entryLocal}, exitLocal={exitLocal}");
-            Debug.Log($"  baselineWorldY={baselineWorldY}, placeY={placeY}");
-        }
-
         roomGO.transform.localPosition = new Vector3(placeX, placeY, 0f);
 
         baselineWorldY = placeY + tilemapLocalOffset.y + exitLocal.y;
