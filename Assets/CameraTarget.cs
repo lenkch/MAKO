@@ -41,12 +41,13 @@ public class CameraTarget : MonoBehaviour
         //    m_target.x += (m_makoMovement.LastHorizontalInputAction == HorizontalInputAction.MoveLeft ? -1 : 1) * HorizontalDistanceMultiplier;
 
         var diff = m_target - transform.position;
-        if (Mathf.Abs(diff.x) > HorizontalSpeed * Time.fixedDeltaTime)
-        {
-            //var lerped = Mathf.Lerp(transform.position.x, m_target.x, HorizontalSpeed * Time.deltaTime);
-            var dx = Mathf.Sign(diff.x) * HorizontalSpeed * Time.fixedDeltaTime;
-            transform.Translate(dx, 0, 0);    
-        }
+        //if (Mathf.Abs(diff.x) > HorizontalSpeed * Time.fixedDeltaTime)
+        //{
+        //    //var lerped = Mathf.Lerp(transform.position.x, m_target.x, HorizontalSpeed * Time.deltaTime);
+        //    var dx = Mathf.Sign(diff.x) * HorizontalSpeed * Time.fixedDeltaTime;
+        //    transform.Translate(dx, 0, 0);    
+        //}
+        transform.Translate(diff.x, 0, 0);
 
         // Track last stood on position.
         var dy = VerticalSpeed * Time.fixedDeltaTime;

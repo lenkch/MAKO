@@ -7,7 +7,7 @@ public class CameraVerticalOffsetZone : MonoBehaviour
     void Start()
     {
         var cameraTarget = GameObject.Find("CameraTarget");
-        m_camTarget = cameraTarget.GetComponent<CameraTarget>();
+        m_camTarget = cameraTarget?.GetComponent<CameraTarget>();
     }
 
     // Update is called once per frame
