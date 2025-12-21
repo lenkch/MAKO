@@ -11,7 +11,7 @@ public class DetectionTrigger : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D trigger)
     {
-        Debug.Log("Entered trigger area.");
+        //Debug.Log("Entered trigger area.");
         if (trigger.CompareTag("Player"))
         {
             enemy.PlayerEnteredRange(trigger.transform.root.gameObject);
@@ -20,7 +20,7 @@ public class DetectionTrigger : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D trigger)
     {
-        Debug.Log("Exit trigger area.");
+        //Debug.Log("Exit trigger area.");
         if (trigger.CompareTag("Player"))
         {
             enemy.PlayerLeftRange();
