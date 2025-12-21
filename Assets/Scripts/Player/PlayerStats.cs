@@ -28,7 +28,7 @@ public class PlayerStats : MonoBehaviour
     {
 
         //Debug.Log("PlayerStats: Awake()");
-        currentLives = maxLives - 4;
+        currentLives = maxLives;
         inputActions = new MakoInputActions();
         usePotionAction = inputActions.Actions.UsePotion;
 
