@@ -22,7 +22,9 @@ public enum MakoState
     RunAround,
     Attack,
     WallSlide,
-    Dashing
+    Dashing,
+    Knockback,
+    Dead
 }
 public enum MakoWallSlideState
 {
@@ -45,10 +47,10 @@ struct MakoGraphicsPacket
 public partial class MakoSimplifiedMovement : MonoBehaviour
 {
     // Constants, modifiable in editor.
-    public float WalkingSpeed = 300.0f;
+    public float WalkingSpeed = 7.0f;
     public float GroundAcceleration = 10.0f;
     public float GroundDecceleration = 8.0f;
-    public float JumpingSpeed = 455.0f;
+    public float JumpingSpeed = 9.0f;
     public float Gravity = -20.0f;
     public float MaxDownwardsVelocity = -1000.0f;
 
@@ -62,11 +64,12 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
     public float AttackCooldown = 0.5f;
     public float AttackVelocityCap = 1.0f;
     public float WallStuckTimer = 0.5f;
-    public Vector2 WallJumpSpeed = new Vector2(600.0f, 400.0f);
-    public float WallSlideSpeed = 30.0f;
-    public float WallSlideNegativeInputMultiplier = 0.03f;
-    public float WallSlideNegativeInputCorrectionSpeed = 0.7f;
-
+    public Vector2 WallJumpSpeed = new Vector2(8.0f, 7.0f);
+    public float WallSlideSpeed = 2.0f;
+    public float WallSlideNegativeInputMultiplier = 0.02f;
+    public float WallSlideNegativeInputCorrectionSpeed = 0.4f;
+    public float KnockbackSpeed = 3.0f;
+    public float KnockbackTimer = 0.3f;
     // References that must be set in editor.
     public Collider2D BodyCollider;
     public Collider2D ClawHitbox;
@@ -122,6 +125,21 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
     private SpriteRenderer m_renderer;
     private Animator m_animator;
 
+    public void Knockback(Vector3 position)
+    {
+        if (transform.position.x < position.x)
+        {
+            m_knockbackDirection = -1;
+        } else
+        {
+            m_knockbackDirection = 1;
+        }
+        switchState(MakoState.Knockback);
+    }
+    public void Die()
+    {
+        switchState(MakoState.Dead);
+    }
 
     void Awake()
     {
@@ -140,6 +158,8 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
             case MakoState.Dashing: enableState_Dashing(); break;
             case MakoState.Attack: enableState_Attacking(); break;
             case MakoState.WallSlide: enableState_WallSlide(); break;
+            case MakoState.Knockback: enableState_Knockback(); break;
+            case MakoState.Dead: enableState_Dead(); break;
             default: Debug.LogError("Unimplemented state!"); break;
         }
     }
@@ -151,6 +171,8 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
             case MakoState.Dashing: disableState_Dashing(); break;
             case MakoState.Attack: disableState_Attacking(); break;
             case MakoState.WallSlide: disableState_WallSlide(); break;
+            case MakoState.Knockback: disableState_Knockback(); break;
+            case MakoState.Dead: disableState_Dead(); break;
             default: Debug.LogError("Unimplemented state!"); break;
         }
     }
@@ -162,6 +184,8 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
             case MakoState.Dashing: initState_Dashing(); break;
             case MakoState.Attack: initState_Attacking(); break;
             case MakoState.WallSlide: initState_WallSlide(); break;
+            case MakoState.Knockback: initState_Knockback(); break;
+            case MakoState.Dead: initState_Dead(); break;
             default: Debug.LogError("Unimplemented state!"); break;
         }
     }
@@ -173,6 +197,8 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
             case MakoState.Dashing: deinitState_Dashing(); break;
             case MakoState.Attack: deinitState_Attacking(); break;
             case MakoState.WallSlide: deinitState_WallSlide(); break;
+            case MakoState.Knockback: deinitState_Knockback(); break;
+            case MakoState.Dead: deinitState_Dead(); break;
             default: Debug.LogError("Unimplemented state!"); break;
         }
     }
@@ -184,6 +210,8 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
             case MakoState.Dashing: updateState_Dashing(); break;
             case MakoState.Attack: updateState_Attacking(); break;
             case MakoState.WallSlide: updateState_WallSlide(); break;
+            case MakoState.Knockback: updateState_Knockback(); break;
+            case MakoState.Dead: updateState_Dead(); break;
             default: Debug.LogError("Unimplemented state!"); break;
         }
     }
@@ -195,6 +223,8 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
             case MakoState.Dashing: fixedUpdateState_Dashing(); break;
             case MakoState.Attack: fixedUpdateState_Attacking(); break;
             case MakoState.WallSlide: fixedUpdateState_WallSlide(); break;
+            case MakoState.Knockback: fixedUpdateState_Knockback(); break;
+            case MakoState.Dead: fixedUpdateState_Dead(); break;
             default: Debug.LogError("Unimplemented state!"); break;
         }
     }
@@ -242,6 +272,8 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
     void FixedUpdate()
     {
         fixedUpdateState(m_state);
+
+        // Update animator variables.
         m_animator.SetBool("Attacking", m_graphicsPacket.Attacking);
         m_animator.SetBool("Dashing", m_graphicsPacket.Dashing);
         m_animator.SetBool("Grounded", m_graphicsPacket.Grounded);
@@ -433,7 +465,7 @@ public partial class MakoSimplifiedMovement
     }
     void updateState_RunAround()
     {
-        var multiplier = 1.0f;
+        float multiplier;
         int hor = (int)m_inputHorizontal.ReadValue<float>();
         switch (hor)
         {
@@ -474,16 +506,16 @@ public partial class MakoSimplifiedMovement
             if (m_grounded)
             {
                 m_graphicsPacket.Jumping = true;
-                m_velocity.y = JumpingSpeed * Time.fixedDeltaTime;
+                m_velocity.y = JumpingSpeed;
             }
         }
 
         m_horizontalInputMultipliers.x = Mathf.Lerp(m_horizontalInputMultipliers.x, 1.0f, WallSlideNegativeInputCorrectionSpeed * Time.fixedDeltaTime);
         m_horizontalInputMultipliers.y = Mathf.Lerp(m_horizontalInputMultipliers.y, 1.0f, WallSlideNegativeInputCorrectionSpeed * Time.fixedDeltaTime);
         // Apply horizontal and vertical acceleration.
-        m_velocity.x = Mathf.Lerp(m_velocity.x, m_targetGroundVelocity * Time.fixedDeltaTime, ((m_targetGroundVelocity * Time.fixedDeltaTime < m_velocity.x) ? GroundDecceleration : GroundAcceleration) * Time.fixedDeltaTime);
+        m_velocity.x = Mathf.Lerp(m_velocity.x, m_targetGroundVelocity, ((m_targetGroundVelocity < m_velocity.x) ? GroundDecceleration : GroundAcceleration) * Time.fixedDeltaTime);
         m_velocity.y += (Gravity + ((m_verticalInputAction == VerticalInputAction.JumpReleased) ? JumpReleaseExtraGravity : 0.0f)) * Time.fixedDeltaTime;
-        m_velocity.y = Mathf.Max(m_velocity.y, MaxDownwardsVelocity * Time.fixedDeltaTime);
+        m_velocity.y = Mathf.Max(m_velocity.y, MaxDownwardsVelocity);
 
         // Apply collisions and velocity.
         horizontalCollisions(m_rigidBody.position, ref m_velocity);
@@ -508,6 +540,50 @@ public partial class MakoSimplifiedMovement
         m_graphicsPacket.AirVelocity = Math.Abs(m_velocity.y) > OuterSkin ? m_velocity.y : 0;
         m_graphicsPacket.Moving = m_horizontalInputAction != HorizontalInputAction.Idle;
         m_graphicsPacket.FacingRight = m_lastHorizontalInputAction == HorizontalInputAction.MoveRight;
+    }
+}
+
+// Dead state
+public partial class MakoSimplifiedMovement
+{
+    void enableState_Dead()
+    {
+        
+    }
+    void disableState_Dead()
+    {
+        
+    }
+    void initState_Dead()
+    {
+        m_graphicsPacket.GroundVelocity = 0;
+        m_graphicsPacket.AirVelocity = 0;
+        m_graphicsPacket.Dashing = false;
+        m_graphicsPacket.Attacking = false;
+        m_graphicsPacket.Jumping = false;
+        m_graphicsPacket.Moving = false;
+        m_graphicsPacket.Grounded = true;
+        m_graphicsPacket.WallSlideState = MakoWallSlideState.Inactive;
+        transform.localRotation = Quaternion.Euler(0, 0, 90);
+    }
+    void deinitState_Dead()
+    {
+    }
+    void updateState_Dead()
+    {
+        
+    }
+    void fixedUpdateState_Dead()
+    {
+        m_velocity.x = Mathf.Lerp(m_velocity.x, 0.0f, GroundDecceleration * Time.fixedDeltaTime);
+        m_velocity.y += Gravity * Time.fixedDeltaTime;
+
+        // Apply collisions and velocity.
+        horizontalCollisions(m_rigidBody.position, ref m_velocity);
+        verticalCollisions(m_rigidBody.position, ref m_velocity);
+        
+        // Apply new position.
+        m_rigidBody.MovePosition(m_rigidBody.position + m_velocity * Time.fixedDeltaTime);
     }
 }
 
@@ -594,8 +670,49 @@ public partial class MakoSimplifiedMovement
     }
 }
 
+// Knockback state.
+public partial class MakoSimplifiedMovement
+{
+    [SerializeField, SerializeAs("Current Knockback Timer")] private  float m_knockbackTimer = 0.0f;
+    [SerializeField, SerializeAs("Knockback Direction")] private int m_knockbackDirection = 1;
+    void enableState_Knockback()
+    {
+    }
+    void disableState_Knockback()
+    {
+        
+    }
+    void initState_Knockback()
+    {
+        m_knockbackTimer = KnockbackTimer;
+        m_velocity.x = KnockbackSpeed * m_knockbackDirection;
+        m_graphicsPacket.Jumping = true;
+    }
+    void deinitState_Knockback()
+    {
+        m_graphicsPacket.Jumping = false;
+    }
+    void updateState_Knockback()
+    {
+        m_knockbackTimer -= Time.deltaTime;
+        if (m_knockbackTimer < 0)
+        {
+            m_knockbackTimer = 0.0f;
+            switchState(MakoState.RunAround);
+        }
+    }
+    void fixedUpdateState_Knockback()
+    {
+        // Apply collisions and velocity.
+        horizontalCollisions(m_rigidBody.position, ref m_velocity);
+        verticalCollisions(m_rigidBody.position, ref m_velocity);
+        
+        // Apply new position.
+        m_rigidBody.MovePosition(m_rigidBody.position + m_velocity * Time.fixedDeltaTime);
+    }
+}
 
-// Attack state.
+// Wall slide state.
 public partial class MakoSimplifiedMovement
 {
     [SerializeField, SerializeAs("Wall Stuck Direction")] private int m_wallDirection = 0;
@@ -604,7 +721,7 @@ public partial class MakoSimplifiedMovement
 
     private void onJumpPress_WallSlide(InputAction.CallbackContext context)
     {
-        m_velocity = WallJumpSpeed * Time.fixedDeltaTime;
+        m_velocity = WallJumpSpeed;
         m_velocity.x *= -m_wallDirection;
         m_lastHorizontalInputAction = (m_lastHorizontalInputAction == HorizontalInputAction.MoveRight) ? HorizontalInputAction.MoveLeft : HorizontalInputAction.MoveRight;
 
@@ -673,7 +790,7 @@ public partial class MakoSimplifiedMovement
     {
         if (m_wallSlideState == MakoWallSlideState.WallSlide)
         {
-            m_velocity.y = -WallSlideSpeed * Time.fixedDeltaTime;
+            m_velocity.y = -WallSlideSpeed;
             m_lastGroundY = m_rigidBody.position.y;
         }
 
@@ -681,7 +798,6 @@ public partial class MakoSimplifiedMovement
         horizontalCollisions(m_rigidBody.position, ref m_velocity);
         verticalCollisions(m_rigidBody.position, ref m_velocity);
         wallSlideCollision(m_rigidBody.position);
-
         
         // Apply new position.
         m_rigidBody.MovePosition(m_rigidBody.position + m_velocity * Time.fixedDeltaTime);

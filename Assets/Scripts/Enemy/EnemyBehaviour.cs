@@ -40,6 +40,14 @@ public class EnemyBehaviour : MonoBehaviour
     private Vector2 targetMovePosition;
     private Vector2 direction = Vector2.left; 
 
+    // kontrola ci je na zemi
+    [Header("Grounded check")]
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundCheckRadius = 0.1f;
+    [SerializeField] private LayerMask groundLayer;
+
+private bool isGrounded;
+
 
     #endregion
    
@@ -83,7 +91,9 @@ public class EnemyBehaviour : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!isInRange)
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position,groundCheckRadius,groundLayer);
+
+        if (!isInRange || !isGrounded)
         {
             return;
         }
@@ -117,6 +127,12 @@ public class EnemyBehaviour : MonoBehaviour
 
     void EnemyLogic()
     {
+        if (!isGrounded)
+        {
+            animator.SetBool("canMove", false);
+            return;
+        }
+
         distance = Vector2.Distance(transform.position, target.transform.position);
         //Debug.Log("Distance to player: " + distance);
 

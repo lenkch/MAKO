@@ -236,10 +236,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18fdcc63a8feffc4a8b8b2bae762ef7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MakoSimplifiedMovement
-  WalkingSpeed: 300
+  WalkingSpeed: 7
   GroundAcceleration: 10
   GroundDecceleration: 8
-  JumpingSpeed: 455
+  JumpingSpeed: 9
   Gravity: -20
   MaxDownwardsVelocity: -1000
   JumpReleaseExtraGravity: -20
@@ -252,7 +252,10 @@ MonoBehaviour:
   AttackCooldown: 0.5
   AttackVelocityCap: 1
   WallStuckTimer: 0.5
-  WallJumpSpeed: {x: 600, y: 400}
+  WallJumpSpeed: {x: 8, y: 7}
+  WallSlideSpeed: 2
+  WallSlideNegativeInputMultiplier: 0.02
+  WallSlideNegativeInputCorrectionSpeed: 0.4
   BodyCollider: {fileID: 3591376162720135472}
   ClawHitbox: {fileID: 1135734937128361988}
   SolidLayerMask:
@@ -262,6 +265,7 @@ MonoBehaviour:
   m_velocity: {x: 0, y: 0}
   m_grounded: 0
   m_coyoteTimer: 0
+  m_horizontalInputMultipliers: {x: 1, y: 1}
   m_horizontalInputAction: 1
   m_verticalInputAction: 1
   m_dashTimer: 0

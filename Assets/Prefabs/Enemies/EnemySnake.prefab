@@ -401,6 +401,11 @@ MonoBehaviour:
   timer: 3
   damage: 1
   biteHitbox: {fileID: 1409295387742016619}
+  groundCheck: {fileID: 5235348633981085245}
+  groundCheckRadius: 0.5
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!114 &8181932900089250032
 MonoBehaviour:
   m_ObjectHideFlags: 0
