@@ -639,7 +639,7 @@ MonoBehaviour:
   firstRoom: {fileID: -8329771519242451890, guid: 23f26db8ea8998b4db53786a6534d8bf, type: 3}
   lastRooms:
   - {fileID: 97578375336882186, guid: 6481614053a5bcf439a4ba4b8fc75905, type: 3}
-  - {fileID: 97578375336882186, guid: 651ead6244b15f44db4f800355d04f05, type: 3}
+  - {fileID: 97578375336882186, guid: ff7fce7498a54cf4baeb89d7c5ce894a, type: 3}
   rooms:
   - {fileID: -8329771519242451890, guid: 15319f4084da4ce4d95926732a433104, type: 3}
   - {fileID: 2331754570911855978, guid: a132061b7836b0340a23969564b88690, type: 3}
