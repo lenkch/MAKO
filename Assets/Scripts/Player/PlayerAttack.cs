@@ -15,7 +15,6 @@ public class PlayerAttack : MonoBehaviour
 
         if (enemyHealth != null)
         {
-            Debug.Log("Triggered ClawHitbox");
             enemyHealth.TakeDamage(playerDamage);
         }
     }

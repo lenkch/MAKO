@@ -395,11 +395,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   raycastLength: 4
-  attackDistance: 0.75
+  attackDistance: 0.5
   enemyMovementSpeed: 1.5
   offsetDistance: 0
   timer: 3
   damage: 1
+  biteHitbox: {fileID: 1409295387742016619}
 --- !u!114 &8181932900089250032
 MonoBehaviour:
   m_ObjectHideFlags: 0

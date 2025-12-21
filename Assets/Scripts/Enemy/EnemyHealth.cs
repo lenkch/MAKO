@@ -4,7 +4,7 @@ using UnityEngine.Events;
 public class EnemyHealth : MonoBehaviour
 {
     [Header("Health")]
-    public int maxEnemyHealth = 5;
+    public int maxEnemyHealth;
     public int currentEnemyHealth; 
 
     public UnityEvent OnHealthChanged;

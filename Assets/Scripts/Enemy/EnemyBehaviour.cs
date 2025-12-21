@@ -19,6 +19,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     [Header("Attack")]
     public int damage = 1;
+    public Collider2D biteHitbox; 
 
 
     #endregion 
@@ -50,6 +51,7 @@ public class EnemyBehaviour : MonoBehaviour
         rigidBody = GetComponent<Rigidbody2D>(); 
 
         GetComponent<EnemyHealth>().OnDeath.AddListener(OnDeath);
+        biteHitbox.enabled = false; 
     }
 
     void Update()
@@ -127,7 +129,7 @@ public class EnemyBehaviour : MonoBehaviour
         }
         else if (distance <= attackDistance && !isAttackOnCooldown)
         {
-            Attack();        
+            StartCoroutine(Attack());     
         }
 
         if (isAttackOnCooldown)
@@ -181,22 +183,25 @@ public class EnemyBehaviour : MonoBehaviour
 
     }
 
-    void Attack()
+     IEnumerator Attack()
     {
-        timer = intTimer; 
+        
 
         if (isAttacking || isAttackOnCooldown)
         {
-            return;
+            yield break;
         }
 
+        yield return new WaitForSeconds(0.5f);
+         timer = intTimer; 
         isAttacking = true; 
 
         animator.SetBool("canMove", false);
         animator.SetBool("Attack", true);
+
     }
 
-    public void DealDamage()
+    /*public void DealDamage()
     {
         if (target == null)
         {
@@ -210,11 +215,11 @@ public class EnemyBehaviour : MonoBehaviour
             target.GetComponent<PlayerStats>()?.TakeDamage(damage);
             Debug.Log("Snake dealt damage");
         }
-    }
+    }*/
 
     void StopAttack()
     {
-        isAttackOnCooldown = false; 
+        //isAttackOnCooldown = false; 
         isAttacking = false; 
 
         animator.SetBool("Attack", false);
@@ -261,6 +266,16 @@ public class EnemyBehaviour : MonoBehaviour
     {
         Debug.Log("Destroy called");
         Destroy(gameObject, 10f);
+    }
+
+    public void EnableHitbox()
+    {
+        biteHitbox.enabled = true;
+    }
+
+    public void DisableHitbox()
+    {
+        biteHitbox.enabled = false;
     }
 
     void RaycastDebugger()
