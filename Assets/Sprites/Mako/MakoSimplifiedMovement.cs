@@ -30,7 +30,8 @@ public enum MakoWallSlideState
 {
     Inactive,
     WallHang,
-    WallSlide
+    WallSlide,
+    LedgeGrab
 }
 struct MakoGraphicsPacket
 {
@@ -107,6 +108,8 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
     [SerializeField, SerializeAs("Mako State")] private MakoState m_state;
 
     private MakoGraphicsPacket m_graphicsPacket;
+    [SerializeField, SerializeAs("Wall Stuck Direction")] private int m_wallDirection = 0;
+    [SerializeField, SerializeAs("Wall Stuck Last Ray Hit")] private int m_wallLastRay = 0;
 
     // Properties.
     public HorizontalInputAction HorizontalInputAction { get { return m_horizontalInputAction; } }
@@ -357,7 +360,8 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
         var velocity = rawVelocity * Time.fixedDeltaTime;
         var direction = Mathf.Sign(velocity.x);
         var distance = Mathf.Abs(velocity.x) + OuterSkin;
-        
+        var originalDistance = distance;
+
         var bounds = BodyCollider.bounds;
         bounds.Expand(-2 * OuterSkin);
         DebugDrawBounds(bounds, Color.purple);
@@ -368,6 +372,9 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
 
         if (m_state == MakoState.RunAround)
             m_wallDirection = 0;
+        int wallDir = 0;
+        int wallRayCount = 0;
+        int lastRay = 0;
         for (var i = 0; i < HorizontalRayCount; i++)
         {
             var origin = Vector2.Lerp(start, end, i / (float) (HorizontalRayCount - 1));
@@ -389,9 +396,25 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
                     distance = hit.distance;
 
                     if (!m_climbingSlope && m_state == MakoState.RunAround)
-                        m_wallDirection = (int) direction;
+                        wallDir = (int) direction;
                 }
             }
+
+            hit = Physics2D.Raycast(origin, Vector2.right * direction, originalDistance, SolidLayerMask);
+            if (hit)
+            {
+                var angle = Vector2.Angle(hit.normal, Vector2.up);
+                if (angle >= 70)
+                {
+                    wallRayCount++;
+                    lastRay = i;
+                }
+            }
+        }
+        if (wallDir != 0 && ((float)wallRayCount >= (float)HorizontalRayCount / 2.0))
+        {
+            m_wallLastRay = lastRay;
+            m_wallDirection = wallDir;
         }
     }
 
@@ -478,6 +501,14 @@ public partial class MakoSimplifiedMovement
 
         if (hor != 0 && hor == m_wallDirection && !m_grounded)
         {
+            Debug.Log(m_wallLastRay);
+            if (m_wallLastRay > 16)
+            {
+                m_wallSlideState = MakoWallSlideState.WallHang;
+            } else
+            {
+                m_wallSlideState = MakoWallSlideState.LedgeGrab;
+            }
             switchState(MakoState.WallSlide);
         }
         m_targetGroundVelocity = multiplier * hor * WalkingSpeed;
@@ -723,17 +754,21 @@ public partial class MakoSimplifiedMovement
 // Wall slide state.
 public partial class MakoSimplifiedMovement
 {
-    [SerializeField, SerializeAs("Wall Stuck Direction")] private int m_wallDirection = 0;
     [SerializeField, SerializeAs("Wall Stuck Timer")] private float m_wallStuckTimer = 0;
-    private MakoWallSlideState m_wallSlideState = MakoWallSlideState.Inactive;
+    [SerializeField, SerializeAs("Wall Slide State")]private MakoWallSlideState m_wallSlideState = MakoWallSlideState.Inactive;
 
     private void onJumpPress_WallSlide(InputAction.CallbackContext context)
     {
-        m_velocity = WallJumpSpeed;
-        m_velocity.x *= -m_wallDirection;
-        m_lastHorizontalInputAction = (m_lastHorizontalInputAction == HorizontalInputAction.MoveRight) ? HorizontalInputAction.MoveLeft : HorizontalInputAction.MoveRight;
+        if (m_wallSlideState == MakoWallSlideState.LedgeGrab)
+        {
+            
+        } else {
+            m_velocity = WallJumpSpeed;
+            m_velocity.x *= -m_wallDirection;
+            m_lastHorizontalInputAction = (m_lastHorizontalInputAction == HorizontalInputAction.MoveRight) ? HorizontalInputAction.MoveLeft : HorizontalInputAction.MoveRight;
 
-        switchState(MakoState.RunAround);
+            switchState(MakoState.RunAround);
+        }
     }
     void enableState_WallSlide()
     {
@@ -745,7 +780,6 @@ public partial class MakoSimplifiedMovement
     }
     void initState_WallSlide()
     {
-        m_wallSlideState = MakoWallSlideState.WallHang;
         m_wallStuckTimer = WallStuckTimer;
         m_verticalInputAction = VerticalInputAction.Idle;
         m_horizontalInputAction = HorizontalInputAction.Idle;
@@ -771,10 +805,13 @@ public partial class MakoSimplifiedMovement
     }
     void updateState_WallSlide()
     {
-        m_wallStuckTimer -= Time.deltaTime;
-        if (m_wallStuckTimer < 0)
+        if (m_wallSlideState == MakoWallSlideState.WallHang)
         {
-            m_wallSlideState = MakoWallSlideState.WallSlide;
+            m_wallStuckTimer -= Time.deltaTime;
+            if (m_wallStuckTimer < 0)
+            {
+                m_wallSlideState = MakoWallSlideState.WallSlide;
+            }
         }
 
         int hor = (int)m_inputHorizontal.ReadValue<float>();
