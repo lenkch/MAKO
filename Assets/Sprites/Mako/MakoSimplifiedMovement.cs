@@ -501,14 +501,14 @@ public partial class MakoSimplifiedMovement
 
         if (hor != 0 && hor == m_wallDirection && !m_grounded)
         {
-            Debug.Log(m_wallLastRay);
-            if (m_wallLastRay > 16)
-            {
-                m_wallSlideState = MakoWallSlideState.WallHang;
-            } else
-            {
-                m_wallSlideState = MakoWallSlideState.LedgeGrab;
-            }
+            //Debug.Log(m_wallLastRay);
+            m_wallSlideState = MakoWallSlideState.WallHang;
+            //if (m_wallLastRay > 0)
+            //{
+            //} else
+            //{
+            //    m_wallSlideState = MakoWallSlideState.LedgeGrab;
+            //}
             switchState(MakoState.WallSlide);
         }
         m_targetGroundVelocity = multiplier * hor * WalkingSpeed;
