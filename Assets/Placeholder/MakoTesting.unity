@@ -426,6 +426,7 @@ MonoBehaviour:
   m_verticalInputAction: 1
   m_dashTimer: 0
   m_attackCooldown: 0
+  m_lastGroundY: 0
   m_state: 0
   m_wallDirection: 0
   m_wallStuckTimer: 0
@@ -3400,8 +3401,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84f1c925ea1551acf90dada18179bdad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  HorizontalDistanceMultiplier: 16
-  HorizontalSpeed: 4
+  HorizontalDistanceMultiplier: 2
+  HorizontalSpeed: 6
+  VerticalSpeed: 3
+  VerticalOffset: 1.5
   Mako: {fileID: 801839195}
 --- !u!1001 &6793329027511138053
 PrefabInstance:
