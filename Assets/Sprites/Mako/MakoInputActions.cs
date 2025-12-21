@@ -210,6 +210,15 @@ public partial class @MakoInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PauseGame"",
+                    ""type"": ""Button"",
+                    ""id"": ""030fdd04-a1c0-4907-b522-d2a7836566ed"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -221,6 +230,17 @@ public partial class @MakoInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""UsePotion"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""151d044e-8ee4-4be4-9947-e6f304658ef1"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PauseGame"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -238,6 +258,7 @@ public partial class @MakoInputActions: IInputActionCollection2, IDisposable
         // Actions
         m_Actions = asset.FindActionMap("Actions", throwIfNotFound: true);
         m_Actions_UsePotion = m_Actions.FindAction("UsePotion", throwIfNotFound: true);
+        m_Actions_PauseGame = m_Actions.FindAction("PauseGame", throwIfNotFound: true);
     }
 
     ~@MakoInputActions()
@@ -449,6 +470,7 @@ public partial class @MakoInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Actions;
     private List<IActionsActions> m_ActionsActionsCallbackInterfaces = new List<IActionsActions>();
     private readonly InputAction m_Actions_UsePotion;
+    private readonly InputAction m_Actions_PauseGame;
     /// <summary>
     /// Provides access to input actions defined in input action map "Actions".
     /// </summary>
@@ -464,6 +486,10 @@ public partial class @MakoInputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Actions/UsePotion".
         /// </summary>
         public InputAction @UsePotion => m_Wrapper.m_Actions_UsePotion;
+        /// <summary>
+        /// Provides access to the underlying input action "Actions/PauseGame".
+        /// </summary>
+        public InputAction @PauseGame => m_Wrapper.m_Actions_PauseGame;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -493,6 +519,9 @@ public partial class @MakoInputActions: IInputActionCollection2, IDisposable
             @UsePotion.started += instance.OnUsePotion;
             @UsePotion.performed += instance.OnUsePotion;
             @UsePotion.canceled += instance.OnUsePotion;
+            @PauseGame.started += instance.OnPauseGame;
+            @PauseGame.performed += instance.OnPauseGame;
+            @PauseGame.canceled += instance.OnPauseGame;
         }
 
         /// <summary>
@@ -507,6 +536,9 @@ public partial class @MakoInputActions: IInputActionCollection2, IDisposable
             @UsePotion.started -= instance.OnUsePotion;
             @UsePotion.performed -= instance.OnUsePotion;
             @UsePotion.canceled -= instance.OnUsePotion;
+            @PauseGame.started -= instance.OnPauseGame;
+            @PauseGame.performed -= instance.OnPauseGame;
+            @PauseGame.canceled -= instance.OnPauseGame;
         }
 
         /// <summary>
@@ -590,5 +622,12 @@ public partial class @MakoInputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnUsePotion(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "PauseGame" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPauseGame(InputAction.CallbackContext context);
     }
 }

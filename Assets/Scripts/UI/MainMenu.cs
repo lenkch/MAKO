@@ -7,6 +7,7 @@ public class MainMenu : MonoBehaviour
     public GameObject optionsPanel;
 
     public bool isOptionsOpen = false;
+ 
 
     void Start()
     {
@@ -21,7 +22,6 @@ public class MainMenu : MonoBehaviour
 
     public void Options() 
     {
-        Debug.Log("Main Menu - Options Button pressed");
 
         if (isOptionsOpen) 
         {
@@ -37,7 +37,6 @@ public class MainMenu : MonoBehaviour
 
     public void Quit()
     {
-        Debug.Log("Main Menu - Quit Button pressed");
         Application.Quit(); // toto funguje len v builde 
     }
 }
