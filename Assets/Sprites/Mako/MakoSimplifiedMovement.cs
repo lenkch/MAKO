@@ -48,7 +48,7 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
     public float WalkingSpeed = 300.0f;
     public float GroundAcceleration = 10.0f;
     public float GroundDecceleration = 8.0f;
-    public float JumpingSpeed = 400.0f;
+    public float JumpingSpeed = 455.0f;
     public float Gravity = -20.0f;
     public float MaxDownwardsVelocity = -1000.0f;
 
@@ -61,8 +61,11 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
     public int VerticalRayCount = 12;
     public float AttackCooldown = 0.5f;
     public float AttackVelocityCap = 1.0f;
-    public float WallStuckTimer = 1.0f;
+    public float WallStuckTimer = 0.5f;
     public Vector2 WallJumpSpeed = new Vector2(600.0f, 400.0f);
+    public float WallSlideSpeed = 30.0f;
+    public float WallSlideNegativeInputMultiplier = 0.03f;
+    public float WallSlideNegativeInputCorrectionSpeed = 0.7f;
 
     // References that must be set in editor.
     public Collider2D BodyCollider;
@@ -84,6 +87,7 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
     private InputAction m_inputAttack;
     
     
+    [SerializeField, SerializeAs("Horizontal Input Multipliers")] private Vector2 m_horizontalInputMultipliers = new Vector2(1, 1); // X = left, Y = right
     [SerializeField, SerializeAs("Horizontal InputAction")] private HorizontalInputAction m_horizontalInputAction = HorizontalInputAction.Idle;
     private HorizontalInputAction m_lastHorizontalInputAction = HorizontalInputAction.MoveRight;
 
@@ -91,6 +95,14 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
     [SerializeField, SerializeAs("Vertical Input Action")] private VerticalInputAction m_verticalInputAction = VerticalInputAction.Idle;
     [SerializeField, SerializeAs("Current Dash Timer")] private float m_dashTimer = 0;
     [SerializeField, SerializeAs("Current Attack Cooldown")] private float m_attackCooldown = 0;
+
+    private bool m_climbingSlope = false;
+    private float m_slopeAngle = 0.0f;
+    [SerializeField, SerializeAs("Last Ground Y")] private float m_lastGroundY = 0.0f;
+
+    [SerializeField, SerializeAs("Mako State")] private MakoState m_state;
+
+    private MakoGraphicsPacket m_graphicsPacket;
 
     // Properties.
     public HorizontalInputAction HorizontalInputAction { get { return m_horizontalInputAction; } }
@@ -102,19 +114,13 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
     public MakoState State { get { return m_state; } }
     public float LastGroundY { get { return m_lastGroundY; }}
 
+
     // Implied component references.
     private Rigidbody2D m_rigidBody;
 
     private SpriteRenderer m_renderer;
     private Animator m_animator;
 
-    private bool m_climbingSlope = false;
-    private float m_slopeAngle = 0.0f;
-    [SerializeField, SerializeAs("Last Ground Y")] private float m_lastGroundY = 0.0f;
-
-    [SerializeField, SerializeAs("Mako State")] private MakoState m_state;
-
-    private MakoGraphicsPacket m_graphicsPacket;
 
     void Awake()
     {
@@ -426,12 +432,13 @@ public partial class MakoSimplifiedMovement
     }
     void updateState_RunAround()
     {
+        var multiplier = 1.0f;
         int hor = (int)m_inputHorizontal.ReadValue<float>();
         switch (hor)
         {
-            case 1: m_horizontalInputAction = HorizontalInputAction.MoveRight; break;
-            case -1: m_horizontalInputAction = HorizontalInputAction.MoveLeft; break;
-            default: m_horizontalInputAction = HorizontalInputAction.Idle; break;
+            case 1: m_horizontalInputAction = HorizontalInputAction.MoveRight; multiplier = m_horizontalInputMultipliers.y; break;
+            case -1: m_horizontalInputAction = HorizontalInputAction.MoveLeft; multiplier = m_horizontalInputMultipliers.x; break;
+            default: m_horizontalInputAction = HorizontalInputAction.Idle; multiplier = 0; break;
         }
         if (m_horizontalInputAction != HorizontalInputAction.Idle)
             m_lastHorizontalInputAction = m_horizontalInputAction;
@@ -440,7 +447,7 @@ public partial class MakoSimplifiedMovement
         {
             switchState(MakoState.WallSlide);
         }
-        m_targetGroundVelocity = hor * WalkingSpeed;
+        m_targetGroundVelocity = multiplier * hor * WalkingSpeed;
 
         if (m_attackCooldown > 0)
         {
@@ -470,6 +477,8 @@ public partial class MakoSimplifiedMovement
             }
         }
 
+        m_horizontalInputMultipliers.x = Mathf.Lerp(m_horizontalInputMultipliers.x, 1.0f, WallSlideNegativeInputCorrectionSpeed * Time.fixedDeltaTime);
+        m_horizontalInputMultipliers.y = Mathf.Lerp(m_horizontalInputMultipliers.y, 1.0f, WallSlideNegativeInputCorrectionSpeed * Time.fixedDeltaTime);
         // Apply horizontal and vertical acceleration.
         m_velocity.x = Mathf.Lerp(m_velocity.x, m_targetGroundVelocity * Time.fixedDeltaTime, ((m_targetGroundVelocity * Time.fixedDeltaTime < m_velocity.x) ? GroundDecceleration : GroundAcceleration) * Time.fixedDeltaTime);
         m_velocity.y += (Gravity + ((m_verticalInputAction == VerticalInputAction.JumpReleased) ? JumpReleaseExtraGravity : 0.0f)) * Time.fixedDeltaTime;
@@ -485,6 +494,8 @@ public partial class MakoSimplifiedMovement
 
             if (m_verticalInputAction != VerticalInputAction.JumpPressed)
                 m_verticalInputAction = VerticalInputAction.Idle;
+            m_horizontalInputMultipliers.x = 1.0f;
+            m_horizontalInputMultipliers.y = 1.0f;
         }
 
         // Apply new position.
@@ -594,7 +605,8 @@ public partial class MakoSimplifiedMovement
     {
         m_velocity = WallJumpSpeed * Time.fixedDeltaTime;
         m_velocity.x *= -m_wallDirection;
-        m_lastGroundY = transform.position.y;
+        m_lastHorizontalInputAction = (m_lastHorizontalInputAction == HorizontalInputAction.MoveRight) ? HorizontalInputAction.MoveLeft : HorizontalInputAction.MoveRight;
+
         switchState(MakoState.RunAround);
     }
     void enableState_WallSlide()
@@ -609,8 +621,22 @@ public partial class MakoSimplifiedMovement
     {
         m_wallSlideState = MakoWallSlideState.WallHang;
         m_wallStuckTimer = WallStuckTimer;
+        m_verticalInputAction = VerticalInputAction.Idle;
+        m_horizontalInputAction = HorizontalInputAction.Idle;
         m_velocity.x = 0;
         m_velocity.y = 0;
+        m_lastGroundY = m_rigidBody.position.y;
+        if (m_wallDirection == 1)
+        {
+            // Wall is to the right; Bias to the left.
+            m_horizontalInputMultipliers.x = 1.0f;
+            m_horizontalInputMultipliers.y = WallSlideNegativeInputMultiplier;
+        } else if (m_wallDirection == -1)
+        {
+            // Wall is to the left; Bias to the right.
+            m_horizontalInputMultipliers.x = WallSlideNegativeInputMultiplier;
+            m_horizontalInputMultipliers.y = 1.0f;
+        }
     }
     void deinitState_WallSlide()
     {
@@ -646,7 +672,8 @@ public partial class MakoSimplifiedMovement
     {
         if (m_wallSlideState == MakoWallSlideState.WallSlide)
         {
-            m_velocity.y = Gravity * Time.fixedDeltaTime;
+            m_velocity.y = -WallSlideSpeed * Time.fixedDeltaTime;
+            m_lastGroundY = m_rigidBody.position.y;
         }
 
         // Apply collisions and velocity.
@@ -654,10 +681,11 @@ public partial class MakoSimplifiedMovement
         verticalCollisions(m_rigidBody.position, ref m_velocity);
         wallSlideCollision(m_rigidBody.position);
 
+        
         // Apply new position.
         m_rigidBody.MovePosition(m_rigidBody.position + m_velocity * Time.fixedDeltaTime);
         m_graphicsPacket.WallSlideState = m_wallSlideState;
-
+        
         if (m_grounded || m_wallDirection == 0)
         {
             switchState(MakoState.RunAround);
