@@ -9,6 +9,8 @@ public class HitBox : MonoBehaviour
         if (trigger.CompareTag("Player"))
         {
             trigger.GetComponent<PlayerStats>()?.TakeDamage(damage);
+            trigger.GetComponent<MakoSimplifiedMovement>()?.Knockback(transform.position);
         }
+
     }
 }
