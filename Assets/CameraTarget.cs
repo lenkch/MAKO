@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraTarget : MonoBehaviour
@@ -7,14 +8,25 @@ public class CameraTarget : MonoBehaviour
     public float HorizontalSpeed = 6.0f;
     public float VerticalSpeed = 3.0f;
     public float VerticalOffset = 1.5f;
+    
     public GameObject Mako;
     private Vector3 m_target;
     private MakoSimplifiedMovement m_makoMovement;
+    [SerializeField, SerializeAs("Current Vertical Offset")] private float m_currentVerticalOffset;
 
+    public void ResetVerticalOffset()
+    {
+        m_currentVerticalOffset = VerticalOffset;
+    }
+    public void ReplaceVerticalOffset(float value)
+    {
+        m_currentVerticalOffset = value;
+    }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         m_makoMovement = Mako.GetComponent<MakoSimplifiedMovement>();
+        m_currentVerticalOffset = VerticalOffset;
     }
 
     // Update is called once per frame
@@ -38,7 +50,7 @@ public class CameraTarget : MonoBehaviour
 
         // Track last stood on position.
         var dy = VerticalSpeed * Time.fixedDeltaTime;
-        var ty = m_makoMovement.LastGroundY + VerticalOffset;
+        var ty = m_makoMovement.LastGroundY + m_currentVerticalOffset;
         if (Mathf.Abs(transform.position.y - ty) > VerticalSpeed * Time.fixedDeltaTime)
         {
             var sign = Mathf.Sign(ty - transform.position.y);
