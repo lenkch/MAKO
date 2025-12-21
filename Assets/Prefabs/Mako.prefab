@@ -235,10 +235,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18fdcc63a8feffc4a8b8b2bae762ef7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MakoSimplifiedMovement
-  WalkingSpeed: 6
+  WalkingSpeed: 300
   GroundAcceleration: 10
   GroundDecceleration: 8
-  JumpingSpeed: 7
+  JumpingSpeed: 455
   Gravity: -20
   MaxDownwardsVelocity: -1000
   JumpReleaseExtraGravity: -20
@@ -250,7 +250,7 @@ MonoBehaviour:
   VerticalRayCount: 12
   AttackCooldown: 0.5
   AttackVelocityCap: 1
-  WallStuckTimer: 2
+  WallStuckTimer: 0.5
   WallJumpSpeed: {x: 600, y: 400}
   BodyCollider: {fileID: 3591376162720135472}
   SolidLayerMask:

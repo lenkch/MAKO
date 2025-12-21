@@ -61,7 +61,7 @@ public partial class MakoSimplifiedMovement : MonoBehaviour
     public int VerticalRayCount = 12;
     public float AttackCooldown = 0.5f;
     public float AttackVelocityCap = 1.0f;
-    public float WallStuckTimer = 2.0f;
+    public float WallStuckTimer = 1.0f;
     public Vector2 WallJumpSpeed = new Vector2(600.0f, 400.0f);
 
     // References that must be set in editor.

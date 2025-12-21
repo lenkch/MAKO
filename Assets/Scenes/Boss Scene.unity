@@ -167,6 +167,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7515302390583609515, guid: 509288e7652dde347b2776b309212ae5, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7515302390583609515, guid: 509288e7652dde347b2776b309212ae5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 7515302390583609515, guid: 509288e7652dde347b2776b309212ae5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.34
+      objectReference: {fileID: 0}
     - target: {fileID: 8098229005850273707, guid: 509288e7652dde347b2776b309212ae5, type: 3}
       propertyPath: m_Name
       value: BossRoom
@@ -247,11 +259,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4236452812011155958, guid: 6c3297b1207cbaf08acbef1734be09a1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 62.3
+      value: 67.25
       objectReference: {fileID: 0}
     - target: {fileID: 4236452812011155958, guid: 6c3297b1207cbaf08acbef1734be09a1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.05
+      value: -1.7
       objectReference: {fileID: 0}
     - target: {fileID: 4236452812011155958, guid: 6c3297b1207cbaf08acbef1734be09a1, type: 3}
       propertyPath: m_LocalPosition.z
