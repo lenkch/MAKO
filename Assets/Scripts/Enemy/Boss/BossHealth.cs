@@ -14,15 +14,16 @@ public class BossHealth : MonoBehaviour
     private Animator animator; 
 
     private bool isDead;
-
+    private BossBehaviour behaviour;
     void Awake()
     {
         currentBossHealth = maxBossHealth;
         animator = GetComponent<Animator>();
         if (OnBossDeath != null)
-    {
-        OnBossDeath.SetActive(false);
-    }
+        {
+            OnBossDeath.SetActive(false);
+        }
+        behaviour = GetComponent<BossBehaviour>();
     }
 
     public void TakeDamage(int damage)
@@ -54,16 +55,18 @@ public class BossHealth : MonoBehaviour
         }
         isDead = true;
 
-        animator.enabled = false;
+        //animator.enabled = false;
+        //transform.rotation = Quaternion.Euler(0f, 0f, 90f);
 
-        transform.rotation = Quaternion.Euler(0f, 0f, 90f);
+        animator.SetTrigger("Dead");
+        behaviour.enabled = false;
 
         OnDeath?.Invoke();
         
         if (OnBossDeath != null)
-    {
-        OnBossDeath.SetActive(true);
-    }
+        {
+            OnBossDeath.SetActive(true);
+        }
         
     }
 }

@@ -884,6 +884,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7907982767134431682, guid: 509288e7652dde347b2776b309212ae5, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 07b338ef1b0e1914ebdd44d7dd094fe2, type: 2}
     - target: {fileID: 8098229005850273707, guid: 509288e7652dde347b2776b309212ae5, type: 3}
       propertyPath: m_Name
       value: BossRoom

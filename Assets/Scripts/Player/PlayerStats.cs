@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -27,6 +28,10 @@ public class PlayerStats : MonoBehaviour
 
     public delegate void DeathTriggered();
     public event DeathTriggered OnDeathTriggered;
+    
+    [Header("Debug")]
+    public bool invulnerability = false;
+
 
     private void Awake()
     {
@@ -57,6 +62,8 @@ public class PlayerStats : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if ( invulnerability )
+            return;
         currentLives -= damage;
         //Debug.Log("Player took damage: " + damage + " Current lives: " + currentLives);
 
