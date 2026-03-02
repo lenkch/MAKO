@@ -34,6 +34,7 @@
 # Visual Studio cache directory
 .vs/
 .vscode
+Assets/Fonts/slkscr*
 
 # Gradle cache directory
 .gradle/
