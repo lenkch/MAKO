@@ -6,7 +6,7 @@ public class BossBehaviour : MonoBehaviour
      public int damage = 1;
     public float attackDistance;
     public Collider2D biteHitbox;
-
+    public RectTransform heartsObject;
     private GameObject target;
     private bool isInRange; 
 
@@ -28,6 +28,19 @@ public class BossBehaviour : MonoBehaviour
             animator.SetBool("Attack", false);
             animator.SetBool("Idle", true);
         }
+
+        if (target != null)
+        {
+            if (target.transform.position.x < transform.position.x)
+            {
+                transform.SetPositionAndRotation(transform.position, Quaternion.AngleAxis(0, Vector3.up));
+                heartsObject.SetLocalPositionAndRotation(heartsObject.localPosition, Quaternion.AngleAxis(0, Vector3.up));
+            } else
+            {
+                transform.SetPositionAndRotation(transform.position, Quaternion.AngleAxis(180, Vector3.up));
+                heartsObject.SetLocalPositionAndRotation(heartsObject.localPosition, Quaternion.AngleAxis(180, Vector3.up));
+            }
+        }
     }
 
     public void PlayerEnteredRange(GameObject player)
@@ -40,7 +53,7 @@ public class BossBehaviour : MonoBehaviour
     public void PlayerLeftRange()
     {
         isInRange = false;
-        target = null;
+        //target = null;
 
         animator.SetBool("Idle", true);
         animator.SetBool("Attack", false);

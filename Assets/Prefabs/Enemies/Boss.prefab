@@ -507,6 +507,7 @@ MonoBehaviour:
   damage: 1
   attackDistance: 0
   biteHitbox: {fileID: 1563673633363847619}
+  heartsObject: {fileID: 5834946110820466396}
 --- !u!50 &5611876663363021656
 Rigidbody2D:
   serializedVersion: 5
