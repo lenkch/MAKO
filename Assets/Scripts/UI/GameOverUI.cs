@@ -14,7 +14,11 @@ public class GameOverUI : MonoBehaviour
     }
     void Awake()
     {
-        ImageComponent.canvasRenderer.SetAlpha(0);
+//        ImageComponent.canvasRenderer.SetAlpha(0);
+        Color fixedColor = ImageComponent.color;
+        fixedColor.a = 1.0f;
+        ImageComponent.color = fixedColor;
+        ImageComponent.CrossFadeAlpha(0f, 0f, true);
     }
     private void OnDestroy()
     {
