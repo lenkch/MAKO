@@ -6,7 +6,7 @@ public class MusicManager : MonoBehaviour
     // singleton - mame jednu instanciu, ku ktorej pristupuje zkadekolvek 
     public static MusicManager Instance; 
 
-    [SerializeField] private AudioSource musicSource;
+    [SerializeField] public AudioSource musicSource;
     [SerializeField] private MusicLibrary musicLibrary;
 
     // volume z options

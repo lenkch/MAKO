@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -13,6 +15,10 @@ public class PauseMenu : MonoBehaviour
     public GameObject optionsPanel;
     public bool isOptionsOpen = false;
 
+    public Slider musicSlider;
+    public TMP_Text volumeValueText;
+    public Toggle musicToggle;
+
     void Awake()
     {
         inputActions = new UIInputActions();
@@ -20,6 +26,15 @@ public class PauseMenu : MonoBehaviour
         optionsPanel.SetActive(false);
         
     } 
+
+    void Start()
+    {
+        musicSlider.value = MusicManager.Instance.musicSource.volume;
+        musicToggle.isOn = !MusicManager.Instance.musicSource.mute;
+
+        musicSlider.onValueChanged.AddListener(SetVolume);
+        musicToggle.onValueChanged.AddListener(ToggleMusic);
+    }
 
     void Update()
     {
@@ -74,6 +89,16 @@ public class PauseMenu : MonoBehaviour
             optionsPanel.SetActive(true);
             isOptionsOpen = true;
         }
+    }
+    void SetVolume(float volume)
+    {
+        volumeValueText.text = Mathf.RoundToInt(volume * 100) + "%"; 
+        MusicManager.Instance.SetMusicVolume(volume);
+    }
+
+    void ToggleMusic(bool isOn)
+    {
+        MusicManager.Instance.SetMusicEnabled(isOn);
     }
     public void LoadMainMenu()
     {

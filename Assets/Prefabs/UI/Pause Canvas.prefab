@@ -33,7 +33,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4922597454407461648}
-  - {fileID: 6777742426887816815}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -120,6 +119,9 @@ MonoBehaviour:
   isPaused: 0
   optionsPanel: {fileID: 6590400569136418870}
   isOptionsOpen: 0
+  musicSlider: {fileID: 5582958654627505082}
+  volumeValueText: {fileID: 4674725331588704481}
+  musicToggle: {fileID: 5525075948530427622}
 --- !u!1001 &4673001257375306014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -225,10 +227,6 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 897578276518295544, guid: 21d66caa9b990224780df3e3b1c0ffad, type: 3}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 5501243516663872027}
-    - target: {fileID: 897578276518295544, guid: 21d66caa9b990224780df3e3b1c0ffad, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SetMusicEnabled
       objectReference: {fileID: 0}
@@ -244,10 +242,6 @@ PrefabInstance:
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 982755258969944740, guid: 21d66caa9b990224780df3e3b1c0ffad, type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 5501243516663872027}
     - target: {fileID: 982755258969944740, guid: 21d66caa9b990224780df3e3b1c0ffad, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
@@ -362,6 +356,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 326864669161421326, guid: 21d66caa9b990224780df3e3b1c0ffad, type: 3}
   m_PrefabInstance: {fileID: 4673001257375306014}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5525075948530427622 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 897578276518295544, guid: 21d66caa9b990224780df3e3b1c0ffad, type: 3}
+  m_PrefabInstance: {fileID: 4673001257375306014}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Toggle
 --- !u!114 &5582958654627505082 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 982755258969944740, guid: 21d66caa9b990224780df3e3b1c0ffad, type: 3}
@@ -397,79 +402,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OptionsMenu
   volumeSlider: {fileID: 5582958654627505082}
   volumeValueText: {fileID: 4674725331588704481}
---- !u!1001 &7846011004584366501
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 7582374963382331343}
-    m_Modifications:
-    - target: {fileID: 3669802179712030666, guid: b1139dddc65f7fa41b3e24ed70a84c24, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 31.381714
-      objectReference: {fileID: 0}
-    - target: {fileID: 3669802179712030666, guid: b1139dddc65f7fa41b3e24ed70a84c24, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 27.615417
-      objectReference: {fileID: 0}
-    - target: {fileID: 3669802179712030666, guid: b1139dddc65f7fa41b3e24ed70a84c24, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3669802179712030666, guid: b1139dddc65f7fa41b3e24ed70a84c24, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3669802179712030666, guid: b1139dddc65f7fa41b3e24ed70a84c24, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3669802179712030666, guid: b1139dddc65f7fa41b3e24ed70a84c24, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3669802179712030666, guid: b1139dddc65f7fa41b3e24ed70a84c24, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3669802179712030666, guid: b1139dddc65f7fa41b3e24ed70a84c24, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3669802179712030666, guid: b1139dddc65f7fa41b3e24ed70a84c24, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3669802179712030666, guid: b1139dddc65f7fa41b3e24ed70a84c24, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6617744006994812569, guid: b1139dddc65f7fa41b3e24ed70a84c24, type: 3}
-      propertyPath: m_Name
-      value: AudioManager
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: b1139dddc65f7fa41b3e24ed70a84c24, type: 3}
---- !u!114 &5501243516663872027 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2358468542097337278, guid: b1139dddc65f7fa41b3e24ed70a84c24, type: 3}
-  m_PrefabInstance: {fileID: 7846011004584366501}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd7e8c0bf5fa3ce4f96d38c75cfe11c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MusicManager
---- !u!4 &6777742426887816815 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3669802179712030666, guid: b1139dddc65f7fa41b3e24ed70a84c24, type: 3}
-  m_PrefabInstance: {fileID: 7846011004584366501}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8024366774338264431
 PrefabInstance:
   m_ObjectHideFlags: 0
