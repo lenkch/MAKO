@@ -1005,6 +1005,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pause Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 4724147019003644686, guid: 4a0389499a78dfe4c84f0000e786f5bc, type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 2560
+      objectReference: {fileID: 0}
     - target: {fileID: 5375315046512540363, guid: 4a0389499a78dfe4c84f0000e786f5bc, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
