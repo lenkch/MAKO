@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -73,6 +74,11 @@ public class PauseMenu : MonoBehaviour
             optionsPanel.SetActive(true);
             isOptionsOpen = true;
         }
+    }
+    public void LoadMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Main Menu");
     }
     public void QuitGame()
     {
